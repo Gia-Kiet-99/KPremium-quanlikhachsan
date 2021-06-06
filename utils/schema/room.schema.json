@@ -1,6 +1,9 @@
 {
   "type": "object",
   "properties": {
+    "room_id": {
+      "type": "string"
+    },
     "room_name": {
       "type": "string"
     },
@@ -25,6 +28,7 @@
     }
   },
   "required": [
+    "room_id",
     "room_name",
     "room_type"
   ],
