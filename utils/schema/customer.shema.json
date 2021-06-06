@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "id_card_number": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "address":{
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["DC", "FC"]
+    }
+  },
+  "required": [
+    "id_card_number",
+    "name",
+    "address",
+    "type"
+  ],
+  "additionalProperties": false
+}

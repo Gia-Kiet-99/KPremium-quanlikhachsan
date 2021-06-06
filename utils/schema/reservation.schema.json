@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "room_id": {
+      "type": "string"
+    },
+    "status":{
+      "type": "string",
+      "enum": ["Paid", "Unpaid"]
+    }
+  },
+  "required": [
+    "room_id",
+    "status"
+  ],
+  "additionalProperties": false
+}

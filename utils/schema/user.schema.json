@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["STAFF", "MANAGER"]
+    }
+  }
+}

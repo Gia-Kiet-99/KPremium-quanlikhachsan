@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "customer_id": {
+      "type": "string"
+    },
+    "reservation_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "customer_id",
+    "reservation_id"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "room_name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Available",
+        "Unavailable",
+        "Fixing"
+      ]
+    },
+    "room_type": {
+      "type": "string",
+      "enum": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "room_name",
+    "room_type"
+  ],
+  "additionalProperties": false
+}

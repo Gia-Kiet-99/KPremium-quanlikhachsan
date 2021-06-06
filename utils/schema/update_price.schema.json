@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "room_id": {
+      "type": "string"
+    },
+    "room_rate": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "room_id",
+    "room_rate"
+  ],
+  "additionalProperties": false
+}
