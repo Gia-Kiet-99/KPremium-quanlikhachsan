@@ -1,36 +1,77 @@
 const roomModel = require('../models/room.model')
 
-module.exports = {
-    getAllRooms: async (req, res, next) => {
+
+getAllRooms = async (req, res, next) => {
+    try {
         const rooms = await roomModel.getAllRoomsFromDb();
         return res.json(rooms);
-    },
-    getRoom: async (req, res, next) => {
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({
+            error: "cannot get rooms"
+        })
+    }
+}
+getRoom = async (req, res, next) => {
+    try {
         const room = await roomModel.getRoomById(req.params.roomId);
         return res.json(room[0]);
-    },
-    addRoom: async (req, res, next) => {
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({
+            error: "room not found"
+        })
+    }
+}
+addRoom = async (req, res, next) => {
+    try {
         const room = await roomModel.createRoom(req.body);
         return res.json(room);
-    },
-    getRate: async (req, res, next) => {
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({
+            error: "cannot add room"
+        })
+    }
+}
+getRate = async (req, res, next) => {
+    try {
         const rate = await roomModel.getRateOfRoom(req.params.roomId);
         return res.json(rate);
-    },
-    getMaxGuests: async (req, res, next) => {
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({
+            error: "room not found"
+        })
+    }
+}
+getMaxGuests = async (req, res, next) => {
+    try {
         const maxGuestsNum = await roomModel.getMaxGuestsOfRoom(req.params.roomId);
         return res.json(maxGuestsNum);
-    },
-    getAvailability: async (req, res, next) => {
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({
+            error: "room not found"
+        })
+    }
+}
+getAvailability = async (req, res, next) => {
+    try {
         const ava = await roomModel.checkIfAvailable(req.params.roomId);
         return res.json(ava);
-    },
-    checkIn: async (req, res, next) => {
-        const result = await roomModel.checkInRoom(req.params.roomId);
-        return res.json(result);
-    },
-    checkOut: async (req, res, next) => {
-        const result = await roomModel.checkOutRoom(req.params.roomId);
-        return res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.status(400).json({
+            error: "room not found"
+        })
     }
+}
+module.exports = {
+    getAllRooms,
+    getRoom,
+    addRoom,
+    getRate,
+    getMaxGuests,
+    getAvailability
 }

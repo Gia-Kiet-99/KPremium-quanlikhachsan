@@ -16,10 +16,6 @@ router.get('/:roomId/rate', roomController.getRate);
 router.get('/:roomId/maxGuests', roomController.getMaxGuests);
 // boolean
 router.get('/:roomId/availability', roomController.getAvailability);
-// string
-router.patch('/:roomId/checkIn', roomController.checkIn);
-//string
-router.patch('/:roomId/checkOut', roomController.checkOut);
 
 
 module.exports = router;

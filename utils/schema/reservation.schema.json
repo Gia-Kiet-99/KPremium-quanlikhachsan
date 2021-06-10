@@ -2,16 +2,41 @@
   "type": "object",
   "properties": {
     "room_id": {
-      "type": "string"
+      "type": "number"
     },
-    "status":{
-      "type": "string",
-      "enum": ["Paid", "Unpaid"]
+    "customers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id_card_number": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "type": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id_card_number",
+          "name",
+          "address",
+          "type"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "uniqueItems": true
     }
   },
   "required": [
     "room_id",
-    "status"
+    "customers"
   ],
   "additionalProperties": false
 }
