@@ -43,9 +43,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// const PORT = 3000;
-// app.listen(PORT, () => {
-//   console.log(`kpremium server api is running at https://localhost:${PORT}`);
-// })
-
 module.exports = app;
