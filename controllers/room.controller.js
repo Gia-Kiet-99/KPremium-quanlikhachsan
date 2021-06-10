@@ -3,7 +3,8 @@ const roomModel = require('../models/room.model')
 module.exports = {
     getAllRooms: async (req, res, next) => {
         const rooms = await roomModel.getAllRoomsFromDb();
-        return res.json(rooms);
+        // return res.json(rooms);
+        res.render("management/room", {rooms});
     },
     getRoom: async (req, res, next) => {
         const room = await roomModel.getRoomById(req.params.roomId);
