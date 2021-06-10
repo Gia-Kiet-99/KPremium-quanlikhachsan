@@ -11,8 +11,8 @@
       "type": "string"
     },
     "type": {
-      "type": "string",
-      "enum": ["DC", "FC"]
+      "type": "number",
+      "enum": [1,2]
     }
   },
   "required": [
