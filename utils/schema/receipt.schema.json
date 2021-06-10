@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "reservation_id": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "reservation_id"
+  ],
+  "additionalProperties": false
+}

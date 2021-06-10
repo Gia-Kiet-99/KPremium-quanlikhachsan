@@ -1,18 +1,26 @@
 "use strict";
 module.exports = {
     USER_TYPE: {
-        STAFF: "STAFF",
-        MANAGER: "MANAGER"
+        STAFF: 1,
+        MANAGER: 2
     },
-
     CUSTOMER_TYPE: {
-        DC: "DC",
-        FC: "FC"
+        DC: 1,
+        FC: 2
+    },
+    ROOM_TYPE: {
+        TypeA: 1,
+        TypeB: 2,
+        TypeC: 3
+    },
+    ROOM_STATUS: {
+        AVAILABLE: 'Available',
+        UNAVAILABLE: 'Unavailable',
+        FIXING: 'Fixing'
+    },
+    RESERVATION_STATUS:{
+        PAID:'Paid',
+        UNPAID:'Unpaid'
     },
 
-    ROOM_TYPE: {
-        A: "A",
-        B: "B",
-        C: "C"
-    }
 }

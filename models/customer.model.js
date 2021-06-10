@@ -1,7 +1,8 @@
 const knex = require('../config/db');
 
-const getAllCustomersFromDb = () => {
-    return knex('customer');
+const getAllCustomersFromDb = async () => {
+    const customers = await knex('customer').join('customer_type', 'customer.type', '=', 'customer_type.type_id');
+    return customers;
 }
 
 const isExist = async (customerIdCardNum) => {
@@ -10,8 +11,13 @@ const isExist = async (customerIdCardNum) => {
 }
 
 const addCustomer = async (customerData) => {
-    const customer = await knex('customer').insert(customerData);
-    return customer;
+    try {
+        await knex('customer').insert(customerData);
+        return customerData;
+    } catch (e) {
+        return null;
+
+    }
 }
 
 const inputCustomers = async (customers) => {
@@ -23,4 +29,18 @@ const inputCustomers = async (customers) => {
         await knex('customer').insert(toAddCustomers);
     }
 }
-module.exports = {getAllCustomersFromDb, inputCustomers}
+
+const getSurchargeNumberByReservationId = async (reservationId) => {
+    const customers = await knex('customer_reservation')
+        .join('customer', 'customer_reservation.customer_id','=', 'customer.id_card_number')
+        .join('customer_type', 'customer.type', '=', 'customer_type.type_id')
+        .select('customer.type', 'customer_type.surcharge','customer_reservation.reservation_id')
+        .where('customer_reservation.reservation_id', reservationId);
+    const foreignCustomers = customers.filter(cus=>cus.type===2);
+    if(foreignCustomers.length!==0){
+        return foreignCustomers[0].surcharge;
+    } else {
+        return customers[0].surcharge;
+    }
+}
+module.exports = {getAllCustomersFromDb, inputCustomers, addCustomer, getSurchargeNumberByReservationId}
