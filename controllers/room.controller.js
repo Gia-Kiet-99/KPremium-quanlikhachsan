@@ -1,10 +1,11 @@
 const roomModel = require('../models/room.model')
 
 
-getAllRooms = async (req, res, next) => {
+getAllRooms = async (req, res) => {
     try {
         const rooms = await roomModel.getAllRoomsFromDb();
-        return res.json(rooms);
+        // return res.json(rooms);
+        res.render("management/room", {rooms});
     } catch (e) {
         console.log(e);
         res.status(400).json({
@@ -12,7 +13,7 @@ getAllRooms = async (req, res, next) => {
         })
     }
 }
-getRoom = async (req, res, next) => {
+getRoom = async (req, res) => {
     try {
         const room = await roomModel.getRoomById(req.params.roomId);
         return res.json(room[0]);
@@ -23,7 +24,7 @@ getRoom = async (req, res, next) => {
         })
     }
 }
-addRoom = async (req, res, next) => {
+addRoom = async (req, res) => {
     try {
         const room = await roomModel.createRoom(req.body);
         return res.json(room);
@@ -34,7 +35,7 @@ addRoom = async (req, res, next) => {
         })
     }
 }
-getRate = async (req, res, next) => {
+getRate = async (req, res) => {
     try {
         const rate = await roomModel.getRateOfRoom(req.params.roomId);
         return res.json(rate);
@@ -45,7 +46,7 @@ getRate = async (req, res, next) => {
         })
     }
 }
-getMaxGuests = async (req, res, next) => {
+getMaxGuests = async (req, res) => {
     try {
         const maxGuestsNum = await roomModel.getMaxGuestsOfRoom(req.params.roomId);
         return res.json(maxGuestsNum);
@@ -56,7 +57,7 @@ getMaxGuests = async (req, res, next) => {
         })
     }
 }
-getAvailability = async (req, res, next) => {
+getAvailability = async (req, res) => {
     try {
         const ava = await roomModel.checkIfAvailable(req.params.roomId);
         return res.json(ava);
