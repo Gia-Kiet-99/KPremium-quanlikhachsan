@@ -7,8 +7,8 @@ const addReservation = async (req, res) => {
         const customers = req.body.customers;
         await customerModel.inputCustomers(customers);
         const result = await reservationModel.createReservation(roomId, customers);
-        if (result !== null) {
-            res.json({message: "reservation created"});
+        if (result) {
+            return res.json(result);
         }
     } catch (e) {
         console.log(e);
