@@ -68,18 +68,17 @@
 <!-- /.container-fluid -->
 
 {{#section 'script'}}
-  <script src="js/demo/chart-area-demo.js"></script>
-
-  <script src="js/demo/chart-pie-demo.js"></script>
-  <script src="js/demo/chart-bar-demo.js"></script>
+  <!-- Page level plugins -->
+  <script src="/vendor/chart.js/Chart.min.js"></script>
+  <script src="/js/demo/chart-area-demo.js"></script>
+  <script src="/js/demo/chart-pie-demo.js"></script>
+  <script src="/js/demo/chart-bar-demo.js"></script>
 
   <script type="application/javascript">
     showAreaChart(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
       [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 10000, 0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 10000, 100000, 10000, 5000, 15000, 10000, 20000]);
     showPieChart(["Direct", "Referral", "Social"], [100,100,100]);
   </script>
-
-
 
 {{/section}}
 

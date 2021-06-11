@@ -13,12 +13,7 @@
       ]
     },
     "room_type": {
-      "type": "number",
-      "enum": [
-        1,
-        2,
-        3
-      ]
+      "type": "number"
     },
     "note": {
       "type": "string"

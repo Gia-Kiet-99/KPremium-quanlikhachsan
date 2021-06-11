@@ -1,11 +1,13 @@
 const express = require('express');
-const roomController = require('../controllers/room.controller');
-
-const validator = require('../middlewares/validator.mdw')
 const router = express.Router();
+
+const roomController = require('../controllers/room.controller');
+const validator = require('../middlewares/validator.mdw');
 
 // rooms array
 router.get('/', roomController.getAllRooms);
+// render new room view
+router.get("/new", roomController.renderNewRoomView);
 // room obj
 router.get('/:roomId', roomController.getRoom);
 // room obj
@@ -19,4 +21,3 @@ router.get('/:roomId/availability', roomController.getAvailability);
 
 
 module.exports = router;
-

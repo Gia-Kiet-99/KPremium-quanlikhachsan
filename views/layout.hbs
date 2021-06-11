@@ -9,16 +9,16 @@
   <meta name="author" content="hcmus">
   <title>KPremium</title>
   <!-- tab icon -->
-  <link rel="icon" href="img/icon.png">
+  <link rel="icon" href="/img/icon.png">
   <!-- Custom fonts for this template-->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link
     href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
     rel="stylesheet">
   <!-- Custom styles for this template-->
-  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
   <!-- Custom styles for this page -->
-  <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+  <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -42,7 +42,7 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item" id="home-item">
       <a class="nav-link" href="/">
         <i class="fas fa-home"></i>
         <span>Home</span></a>
@@ -57,28 +57,28 @@
     </div>
 
     <!-- Nav Item - Room Menu -->
-    <li class="nav-item">
+    <li class="nav-item" id="room-item">
       <a class="nav-link py-2" href="/rooms">
         <i class="fas fa-fw fa-wrench"></i>
         <span>Room</span>
       </a>
     </li>
     <!-- Nav Item - Reservation Menu -->
-    <li class="nav-item">
+    <li class="nav-item" id="reservation-item">
       <a class="nav-link py-2" href="/reservations">
         <i class="fas fa-fw fa-wrench"></i>
         <span>Reservation</span>
       </a>
     </li>
     <!-- Nav Item - Receipt Menu -->
-    <li class="nav-item">
+    <li class="nav-item" id="receipt-item">
       <a class="nav-link py-2" href="/receipts">
         <i class="fas fa-fw fa-wrench"></i>
         <span>Receipt</span>
       </a>
     </li>
     <!-- Nav Item - Customer Menu -->
-    <li class="nav-item">
+    <li class="nav-item" id="customer-item">
       <a class="nav-link py-2" href="/customers">
         <i class="fas fa-fw fa-wrench"></i>
         <span>Customer</span>
@@ -94,7 +94,7 @@
     </div>
 
     <!-- Nav Item - Charts -->
-    <li class="nav-item">
+    <li class="nav-item" id="charts-item">
       <a class="nav-link" href="/statistics">
         <i class="fas fa-fw fa-chart-area"></i>
         <span>Charts</span></a>
@@ -187,7 +187,7 @@
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="mr-2 d-none d-lg-inline text-gray-600 small">Manager</span>
               <img class="img-profile rounded-circle"
-                   src="img/undraw_profile.svg">
+                   src="/img/undraw_profile.svg">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -254,22 +254,23 @@
 </div>
 
 <!-- Bootstrap core JavaScript-->
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="js/sb-admin-2.min.js"></script>
+<script src="/js/sb-admin-2.min.js"></script>
 
-<!-- Page level plugins -->
-<script src="vendor/chart.js/Chart.min.js"></script>
-<script src="vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script id="greet" type="text/x-handlebars-template">
+  {{activeMenu}}
+</script>
 
-<!-- Page level custom scripts -->
-<script src="js/demo/datatables-demo.js"></script>
+<script type="text/javascript">
+  const active = document.getElementById("greet").innerText.trim();
+  $(`#${active}`).addClass("active");
+</script>
 
 {{{_sections.script}}}
 </body>
