@@ -3,13 +3,13 @@
   <div class="row my-3">
     <div class="col-sm-6">
       <!-- Page Heading -->
-      <h1 class="h3 mb-2 text-gray-800">Rooms</h1>
+      <h1 class="h3 mb-2 text-gray-800">Reservation</h1>
     </div>
     <div class="col-sm-6 text-right">
-      <a role="button" href="/rooms/new"
+      <a role="button" href="/reservations/new"
          class="btn font-weight-bold text-gray-100"
          style="background-color: #4e73df;">
-        Create New Room
+        Create New Reservation
       </a>
     </div>
   </div>
@@ -17,7 +17,7 @@
   <!-- DataTales Example -->
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Room table</h6>
+      <h6 class="m-0 font-weight-bold text-primary">Reservation table</h6>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -26,20 +26,19 @@
           <tr>
             <th class="col-1">ID</th>
             <th>Room Name</th>
+            <th class="col-4">Check In Time</th>
             <th class="col-2">Status</th>
-            <th class="col-2">Note</th>
-            <th class="col-2">Room Type</th>
+<!--            <th class="col-2">Customer</th>-->
             <th class="col-2">Options</th>
           </tr>
           </thead>
           <tbody>
-          {{#each rooms}}
+          {{#each reservations}}
             <tr>
-              <th scope="row">{{this.room_id}}</th>
+              <th scope="row">{{this.id}}</th>
               <td>{{this.room_name}}</td>
+              <td>{{this.check_in_time}}</td>
               <td>{{this.status}}</td>
-              <td>{{this.note}}</td>
-              <td>{{this.type_name}}</td>
               <td>
                 <button class="btn py-0 px-1">
                   <i class="far fa-edit fa-sm" style="color: #4e73df"></i>

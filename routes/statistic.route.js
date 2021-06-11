@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.render("statistic/chart");
-});
+const statisticController = require("../controllers/statistic.controller");
+
+router.get("/", statisticController.renderChartsPage);
 
 module.exports = router;

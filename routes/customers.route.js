@@ -2,7 +2,8 @@ const router = require('express').Router();
 const customerController = require('../controllers/customer.controller');
 const validator = require('../middlewares/validator.mdw');
 
-router.get('/', customerController.getAllCustomers);
+// render customer page
+router.get('/', customerController.renderCustomersPage);
 router.post('/',validator.validate('customer'), customerController.addCustomer);
 
 module.exports = router;

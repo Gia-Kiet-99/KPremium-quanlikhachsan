@@ -42,18 +42,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 const indexRouter = require('./routes/index');
 // const usersRouter = require('./routes/users');
 const roomsRouter = require('./routes/room.route');
-// const reservationsRouter = require('./routes/reservation.route');
-// const customerRouter = require('./routes/customers.route');
-// const receiptRouter = require('./routes/receipt.route');
+const reservationsRouter = require('./routes/reservation.route');
+const customerRouter = require('./routes/customers.route');
+const receiptRouter = require('./routes/receipt.route');
 const statisticRouter = require("./routes/statistic.route");
 
 app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 app.use('/rooms', roomsRouter);
-// app.use('/reservations', reservationsRouter);
+app.use('/reservations', reservationsRouter);
 app.use('/statistics', statisticRouter);
-// app.use('/customers', customerRouter);
-// app.use('/receipts', receiptRouter);
+app.use('/customers', customerRouter);
+app.use('/receipts', receiptRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
