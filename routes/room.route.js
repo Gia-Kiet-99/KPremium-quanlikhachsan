@@ -14,6 +14,7 @@ router.patch("/:roomId",
   validator.validate("room"),
   roomController.updateRoomInfo
 );
+router.delete("/:roomId", roomController.removeRoom);
 // room obj
 router.post('/', validator.validate('room'), roomController.addRoom);
 // num

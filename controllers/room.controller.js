@@ -111,14 +111,20 @@ const updateRoomInfo = async (req, res) => {
   const roomId = req.params.roomId;
   const dataToUpdate = req.body;
 
-  const isExists = await roomModel.getRoomById(roomId);
-  if (isExists.length === 0) {
+  const updatedRoom = await roomModel.update(roomId, dataToUpdate);
+  res.json(updatedRoom);
+}
+
+const removeRoom = async (req, res) => {
+  const roomId = req.params.roomId;
+
+  const ret = await roomModel.remove(roomId);
+  if (!ret) {
     return res.status(400).json({
       error_message: "room not found"
     });
   }
-  const updatedRoom = await roomModel.update(roomId, dataToUpdate);
-  res.json(updatedRoom);
+  res.json(ret);
 }
 
 module.exports = {
@@ -130,5 +136,6 @@ module.exports = {
   getAvailability,
   renderNewRoomView,
   renderUpdateRoomPage,
-  updateRoomInfo
+  updateRoomInfo,
+  removeRoom
 }

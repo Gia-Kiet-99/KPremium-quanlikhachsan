@@ -34,7 +34,7 @@
           </thead>
           <tbody>
           {{#each rooms}}
-            <tr>
+            <tr id="room-id-{{this.room_id}}">
               <th scope="row">{{this.room_id}}</th>
               <td>{{this.room_name}}</td>
               <td>{{this.status}}</td>
@@ -85,17 +85,22 @@
         cancelButtonText: 'No, cancel!',
       }).then((result) => {
         if (result.isConfirmed) {
-          // deleteFilm(roomId);
+          deleteFilm(roomId);
         }
       })
     }
 
     function deleteFilm(roomId) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
       $.ajax({
-        url: `http://localhost:3000/api/films/${roomId}`,
+        url: `${baseUrl}/rooms/${roomId}`,
         type: 'DELETE'
-      }).done(() => {
-        $(`#${film_id}`).remove();
+      }).done((data) => {
+        $(`#room-id-${roomId}`).remove();
+        console.log(data);
         Swal.fire({
           icon: 'success',
           title: 'The film has been deleted',

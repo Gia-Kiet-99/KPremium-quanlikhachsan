@@ -94,5 +94,12 @@ module.exports = {
     } catch (e) {
       throw Error(e);
     }
+  },
+  remove: async (roomId) => {
+    try {
+      return await knex("room").where("room_id", roomId).del();
+    } catch (e) {
+      throw Error(e);
+    }
   }
 }
