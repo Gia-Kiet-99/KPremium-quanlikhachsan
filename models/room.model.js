@@ -12,8 +12,13 @@ module.exports = {
     }
   },
   getRoomById: async (roomId) => {
-    return knex('room')
-      .where('room_id', roomId);
+    let room = [];
+    try {
+      room = await knex('room').where('room_id', roomId);
+    } catch (e) {
+      console.error(e);
+    }
+    return room;
   },
   createRoom: async (roomData) => {
     !roomData.status && (roomData.status = CONST.ROOM_STATUS.AVAILABLE);
@@ -41,24 +46,22 @@ module.exports = {
       .select('status');
     console.log(res);
     const status = res[0].status;
-    if (status == 'Available') {
-      return true
-    } else return false;
+    return status === 'Available';
   },
   checkInRoom: async (roomId) => {
     const rooms = await knex('room').where('room_id', roomId);
     const room = rooms[0];
-    if (room.status == CONST.ROOM_STATUS.AVAILABLE) {
+    if (room.status === CONST.ROOM_STATUS.AVAILABLE) {
       room.status = CONST.ROOM_STATUS.UNAVAILABLE;
       const res = await knex('room').update(room).where('room_id', roomId);
       if (res) {
         console.log('checked in');
         return 1;
       }
-    } else if (room.status == CONST.ROOM_STATUS.UNAVAILABLE) {
+    } else if (room.status === CONST.ROOM_STATUS.UNAVAILABLE) {
       console.log('room unavailable');
       return 0;
-    } else if (room.status == CONST.ROOM_STATUS.FIXING) {
+    } else if (room.status === CONST.ROOM_STATUS.FIXING) {
       console.log('room fixing');
       return -1;
     }
@@ -68,19 +71,28 @@ module.exports = {
     const rooms = await knex('room').where('room_id', roomId)
       .join('room_type', 'room.room_type', '=', 'room_type.type_id');
     const room = rooms[0];
-    if (room.status == CONST.ROOM_STATUS.UNAVAILABLE) {
+    if (room.status === CONST.ROOM_STATUS.UNAVAILABLE) {
       const res = await knex('room').update({status: CONST.ROOM_STATUS.AVAILABLE}).where('room_id', roomId);
       if (res) {
         console.log('checked out');
         return room.room_rate;
       }
-    } else if (room.status == CONST.ROOM_STATUS.AVAILABLE) {
+    } else if (room.status === CONST.ROOM_STATUS.AVAILABLE) {
       console.log('cannot checkout available room');
       return 0;
-    } else if (room.status == CONST.ROOM_STATUS.FIXING) {
+    } else if (room.status === CONST.ROOM_STATUS.FIXING) {
       console.log('room fixing');
       return -1;
     }
     return null;
+  },
+  update: async (roomId, dataToUpdate) => {
+    try {
+      return await knex("room")
+        .where("room_id", roomId)
+        .update(dataToUpdate);
+    } catch (e) {
+      throw Error(e);
+    }
   }
 }

@@ -1,5 +1,6 @@
 const roomModel = require('../models/room.model')
 const roomTypeModel = require("../models/room_type.model");
+const Config = require("../config/contraint");
 
 const getAllRooms = async (req, res) => {
   try {
@@ -82,6 +83,44 @@ const renderNewRoomView = async (req, res) => {
   });
 }
 
+const renderUpdateRoomPage = async (req, res, next) => {
+  const roomId = req.params.roomId || 0;
+
+  const rooms = await roomModel.getRoomById(roomId);
+  console.log(JSON.stringify(rooms, null, 2));
+
+  if (rooms.length === 0) {
+    return next();
+  }
+
+  const types = await roomTypeModel.getAll();
+  const statuses = Object.values(Config.ROOM_STATUS);
+
+  console.log(JSON.stringify(types, null, 2));
+  console.log(statuses);
+
+  res.render("management/update/room", {
+    activeMenu: "room-item",
+    room: rooms[0],
+    types: types,
+    statuses: statuses
+  });
+}
+
+const updateRoomInfo = async (req, res) => {
+  const roomId = req.params.roomId;
+  const dataToUpdate = req.body;
+
+  const isExists = await roomModel.getRoomById(roomId);
+  if (isExists.length === 0) {
+    return res.status(400).json({
+      error_message: "room not found"
+    });
+  }
+  const updatedRoom = await roomModel.update(roomId, dataToUpdate);
+  res.json(updatedRoom);
+}
+
 module.exports = {
   getAllRooms,
   getRoom,
@@ -89,5 +128,7 @@ module.exports = {
   getRate,
   getMaxGuests,
   getAvailability,
-  renderNewRoomView
+  renderNewRoomView,
+  renderUpdateRoomPage,
+  updateRoomInfo
 }

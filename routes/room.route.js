@@ -9,7 +9,11 @@ router.get('/', roomController.getAllRooms);
 // render new room view
 router.get("/new", roomController.renderNewRoomView);
 // room obj
-router.get('/:roomId', roomController.getRoom);
+router.get('/:roomId', roomController.renderUpdateRoomPage);
+router.patch("/:roomId",
+  validator.validate("room"),
+  roomController.updateRoomInfo
+);
 // room obj
 router.post('/', validator.validate('room'), roomController.addRoom);
 // num

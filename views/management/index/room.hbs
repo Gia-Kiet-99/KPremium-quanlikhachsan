@@ -41,10 +41,10 @@
               <td>{{this.note}}</td>
               <td>{{this.type_name}}</td>
               <td>
-                <button class="btn py-0 px-1">
+                <a role="button" class="btn py-0 px-1" href="/rooms/{{this.room_id}}">
                   <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
-                </button>
-                <button class="btn py-0 px-1">
+                </a>
+                <button role="button" class="btn py-0 px-1" onclick="confirmDelete('{{this.room_id}}')">
                   <i class="far fa-trash-alt fa-sm"></i>
                 </button>
               </td>
@@ -59,8 +59,59 @@
 </div>
 
 {{#section "script"}}
+  <!-- Sweetalert -->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Datatables -->
   <script src="/js/demo/datatables-demo.js"></script>
   <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <script type="text/javascript">
+    function confirmDelete(roomId) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-danger mr-3',
+          cancelButton: 'btn btn-light'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // deleteFilm(roomId);
+        }
+      })
+    }
+
+    function deleteFilm(roomId) {
+      $.ajax({
+        url: `http://localhost:3000/api/films/${roomId}`,
+        type: 'DELETE'
+      }).done(() => {
+        $(`#${film_id}`).remove();
+        Swal.fire({
+          icon: 'success',
+          title: 'The film has been deleted',
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }).fail((error) => {
+        console.log(error);
+        Swal.fire({
+          title: 'Oops...',
+          text: error.statusText,
+          icon: 'error',
+          confirmButtonText: 'Sad'
+        })
+      })
+    }
+  </script>
+
 {{/section}}

@@ -17,7 +17,14 @@ const hbs = handlebars.create({
     },
     isFixing: function (value) {
       return value === "Fixing";
+    },
+    equal: function (a, b) {
+      return a === b;
+    },
+    ifEqual: function (arg1, arg2, options) {
+      return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
     }
+
   }
 });
 
