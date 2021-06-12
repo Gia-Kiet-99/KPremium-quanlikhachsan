@@ -46,7 +46,6 @@
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script type="application/javascript">
-
     $("#btnSave").on("click", () => {
       const roomName = $("#room-name").val().trim();
       const roomType = parseInt($("#room-type").val());
@@ -63,8 +62,14 @@
     });
 
     function createNewRoom(data) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
+
+      console.log(baseUrl);
       $.ajax({
-        url: "http://localhost:3000/rooms",
+        url: `${baseUrl}/rooms`,
         type: "POST",
         dataType: "json",
         data: data,

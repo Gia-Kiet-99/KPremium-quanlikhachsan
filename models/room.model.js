@@ -3,11 +3,13 @@ const CONST = require('../config/contraint');
 
 module.exports = {
   getAllRoomsFromDb: async () => {
-    const rooms = knex('room')
-      .join('room_type', 'room.room_type', '=', 'room_type.type_id')
-      .select("room_id", "room_name", "status",
-        "note", "type_name");
-    return rooms;
+    try {
+      return knex('room')
+        .join('room_type', 'room.room_type', '=', 'room_type.type_id')
+        .select("room_id", "room_name", "status", "note", "type_name");
+    } catch (e) {
+      throw Error(e);
+    }
   },
   getRoomById: async (roomId) => {
     return knex('room')
