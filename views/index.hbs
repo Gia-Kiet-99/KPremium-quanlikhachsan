@@ -1,86 +1,89 @@
 <div class="container-fluid">
 
-    <div class="row">
-        <div class="col-6 mb-4">
-            <button type="button" class="btn shadow text-success font-weight-bold" onclick="filterRooms({{json rooms}})">
-                All ({{rooms.length}})
-            </button>
-            <button type="button" class="btn btn-success font-weight-bold" onclick="filterRooms({{json availableRooms}})">
-                Available ({{availableRooms.length}})
-            </button>
-            <button type="button" class="btn btn-info font-weight-bold" onclick="filterRooms({{json unavailableRooms}})">
-                Unavailable ({{unavailableRooms.length}})
-            </button>
-            <button type="button" class="btn btn-secondary font-weight-bold" onclick="filterRooms({{json fixingRooms}})">
-                Fixing ({{fixingRooms.length}})
-            </button>
-        </div>
+  <div class="row">
+    <div class="col-6 mb-4">
+      <button type="button" class="btn shadow text-success font-weight-bold" onclick="filterRooms({{json rooms}})">
+        All ({{rooms.length}})
+      </button>
+      <button type="button" class="btn btn-success font-weight-bold" onclick="filterRooms({{json availableRooms}})">
+        Available ({{availableRooms.length}})
+      </button>
+      <button type="button" class="btn btn-info font-weight-bold" onclick="filterRooms({{json unavailableRooms}})">
+        Unavailable ({{unavailableRooms.length}})
+      </button>
+      <button type="button" class="btn btn-secondary font-weight-bold" onclick="filterRooms({{json fixingRooms}})">
+        Fixing ({{fixingRooms.length}})
+      </button>
     </div>
+  </div>
 
-    <div class="row" id="roomRow">
-        {{#each rooms}}
-            {{#if (isAvailable this.status)}}
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-success shadow h-100 py-2"
-                         style="background-color: rgba(46, 204, 113, 0.4)">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-lg font-weight-bold text-success text-uppercase mb-1">
-                                        {{this.room_name}}
-                                    </div>
-                                    <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
-                                </div>
-                                <!--                <div class="col-auto">-->
-                                <!--                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
-                                <!--                </div>-->
-                            </div>
-                        </div>
-                    </div>
+  <div class="row" id="roomRow">
+    {{#each rooms}}
+      {{#if (isAvailable this.status)}}
+        <div class="col-xl-3 col-md-6 mb-4">
+          <button class="card border-left-success shadow h-100 py-2 btn btn-block"
+                  style="background-color: rgba(46, 204, 113, 0.4)"
+                  data-toggle="modal" data-target="#roomInfoModal" data-whatever="{{json this}}">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                  <div class="text-lg font-weight-bold text-success text-uppercase mb-1">
+                    {{this.room_name}}
+                  </div>
+                  <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
                 </div>
-            {{else}}
-                {{#if (isUnavailable this.status)}}
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2"
-                             style="background-color: rgba(52, 152, 219, 0.4)">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-lg font-weight-bold text-info text-uppercase mb-1">
-                                            {{this.room_name}}
-                                        </div>
-                                        <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
-                                    </div>
-                                    <!--                  <div class="col-auto">-->
-                                    <!--                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
-                                    <!--                  </div>-->
-                                </div>
-                            </div>
-                        </div>
+                <!--                <div class="col-auto">-->
+                <!--                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
+                <!--                </div>-->
+              </div>
+            </div>
+          </button>
+        </div>
+      {{else}}
+        {{#if (isUnavailable this.status)}}
+          <div class="col-xl-3 col-md-6 mb-4">
+            <button class="card border-left-info shadow h-100 py-2 btn btn-block"
+                    style="background-color: rgba(52, 152, 219, 0.4)"
+                    data-toggle="modal" data-target="#roomInfoModal" data-whatever="{{json this}}">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-lg font-weight-bold text-info text-uppercase mb-1">
+                      {{this.room_name}}
                     </div>
-                {{else}}
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-secondary shadow h-100 py-2"
-                             style="background-color: #95a5a6">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-lg font-weight-bold text-gray-800 text-uppercase mb-1">
-                                            {{this.room_name}}
-                                        </div>
-                                        <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
-                                    </div>
-                                    <!--                  <div class="col-auto">-->
-                                    <!--                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
-                                    <!--                  </div>-->
-                                </div>
-                            </div>
-                        </div>
+                    <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
+                  </div>
+                  <!--                  <div class="col-auto">-->
+                  <!--                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
+                  <!--                  </div>-->
+                </div>
+              </div>
+            </button>
+          </div>
+        {{else}}
+          <div class="col-xl-3 col-md-6 mb-4">
+            <button class="card border-left-secondary shadow h-100 py-2 btn btn-block"
+                    style="background-color: #95a5a6"
+                    data-toggle="modal" data-target="#roomInfoModal" data-whatever="{{json this}}">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-lg font-weight-bold text-gray-800 text-uppercase mb-1">
+                      {{this.room_name}}
                     </div>
-                {{/if}}
-            {{/if}}
-        {{/each}}
-    </div>
+                    <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
+                  </div>
+                  <!--                  <div class="col-auto">-->
+                  <!--                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
+                  <!--                  </div>-->
+                </div>
+              </div>
+            </button>
+          </div>
+        {{/if}}
+      {{/if}}
+    {{/each}}
+  </div>
 </div>
 
 <!-- Room Info Modal-->
@@ -108,15 +111,17 @@
 </div>
 
 {{#section "script"}}
-    <script>
-        function filterRooms(rooms) {
-            let content = "";
-            for (const room of rooms) {
-                if (room.status == "Available") {
-                    content += `
+  <script>
+    function filterRooms(rooms) {
+      let content = "";
+      for (const room of rooms) {
+        const roomString = JSON.stringify(room).replace(/"/g, "'");
+        if (room.status === "Available") {
+          content += `
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2"
-                     style="background-color: rgba(46, 204, 113, 0.4)">
+                <button class="card border-left-success shadow h-100 py-2 btn btn-block"
+                        style="background-color: rgba(46, 204, 113, 0.4)"
+                        data-toggle="modal" data-target="#roomInfoModal" data-whatever="${roomString}">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
@@ -127,51 +132,56 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </button>
             </div>`
-                } else if (room.status == "Unavailable") {
-                    content += `
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2"
-                             style="background-color: rgba(52, 152, 219, 0.4)">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-lg font-weight-bold text-info text-uppercase mb-1">
-                                            ${room.room_name}
-                                        </div>
-                                        <div class="h6 mb-0 font-weight-bold text-gray-800">${room.status}</div>
-                                    </div>
+        } else if (room.status === "Unavailable") {
+          content += `
+            <div class="col-xl-3 col-md-6 mb-4">
+                <button class="card border-left-info shadow h-100 py-2 btn btn-block"
+                        style="background-color: rgba(52, 152, 219, 0.4)"
+                        data-toggle="modal" data-target="#roomInfoModal" data-whatever="${roomString}">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-lg font-weight-bold text-info text-uppercase mb-1">
+                                    ${room.room_name}
                                 </div>
+                                <div class="h6 mb-0 font-weight-bold text-gray-800">${room.status}</div>
                             </div>
                         </div>
-                    </div>`
-                } else {
-                    content+=`
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-secondary shadow h-100 py-2"
-                             style="background-color: #95a5a6">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-lg font-weight-bold text-gray-800 text-uppercase mb-1">
-                                            ${room.room_name}
-                                        </div>
-                                        <div class="h6 mb-0 font-weight-bold text-gray-800">${room.status}</div>
-                                    </div>
+                    </div>
+                </button>
+            </div>`
+        } else {
+          content += `
+            <div class="col-xl-3 col-md-6 mb-4">
+                <button class="card border-left-secondary shadow h-100 py-2 btn btn-block"
+                        style="background-color: #95a5a6"
+                        data-toggle="modal" data-target="#roomInfoModal" data-whatever="${roomString}">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-lg font-weight-bold text-gray-800 text-uppercase mb-1">
+                                    ${room.room_name}
                                 </div>
+                                <div class="h6 mb-0 font-weight-bold text-gray-800">${room.status}</div>
                             </div>
                         </div>
-                    </div>`
-                }
-            }
-            $('#roomRow').html(content);
+                    </div>
+                </button>
+            </div>`
         }
+      }
 
-$('#roomInfoModal').on('show.bs.modal', function (event) {
+      $('#roomRow').html(content);
+    }
+
+    $('#roomInfoModal').on('show.bs.modal', function (event) {
       let button = $(event.relatedTarget); // Button that triggered the modal
       let data = button.data('whatever'); // Extract info from data-* attributes
-      console.log(data);
+      if (typeof data === "string") {
+        data = JSON.parse(data.replace(/'/g, '"'));
+      }
 
       let modal = $(this);
       // remove modal footer
@@ -188,13 +198,15 @@ $('#roomInfoModal').on('show.bs.modal', function (event) {
         case "Available":
           modalFooter = `<div class="modal-footer">
                           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                          <a class="btn btn-primary" href="/reservations/new">Create Reservation</a>
+                          <a class="btn btn-primary" href="/reservations/new?roomId=${data.room_id}">Create Reservation</a>
                         </div>`;
           break;
         case "Unavailable":
           modalFooter = `<div class="modal-footer">
                           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                          <a class="btn btn-primary" href="/receipts/new">Create Receipt</a>
+                          <button type="button" class="btn btn-primary">
+                            Create Receipt
+                          </button>
                         </div>`;
           break;
         default:
@@ -204,5 +216,5 @@ $('#roomInfoModal').on('show.bs.modal', function (event) {
       $(".modal-content.room-modal-content").append(modalFooter);
     });
 
-    </script>
+  </script>
 {{/section}}

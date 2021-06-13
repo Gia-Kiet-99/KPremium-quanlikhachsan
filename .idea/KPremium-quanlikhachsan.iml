@@ -14,5 +14,6 @@
     <orderEntry type="library" name="jquery-3.5.1" level="application" />
     <orderEntry type="library" name="popper.js" level="application" />
     <orderEntry type="library" name="5ab99f6a6e" level="application" />
+    <orderEntry type="library" name="handlebars" level="application" />
   </component>
 </module>
