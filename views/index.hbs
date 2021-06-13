@@ -83,6 +83,30 @@
     </div>
 </div>
 
+<!-- Room Info Modal-->
+<div class="modal fade" id="roomInfoModal" tabindex="-1" role="dialog" aria-labelledby="roomInfoModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content room-modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="roomInfoModalLabel">Room Detail</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li id="li-room-id">{{room.room_id}}</li>
+          <li id="li-room-name">{{room.room_name}}</li>
+          <li id="li-room-status">{{room.status}}</li>
+          <li id="li-room-note">{{room.note}}</li>
+          <li id="li-room-type">{{room.type_name}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 {{#section "script"}}
     <script>
         function filterRooms(rooms) {
@@ -143,6 +167,42 @@
             }
             $('#roomRow').html(content);
         }
+
+$('#roomInfoModal').on('show.bs.modal', function (event) {
+      let button = $(event.relatedTarget); // Button that triggered the modal
+      let data = button.data('whatever'); // Extract info from data-* attributes
+      console.log(data);
+
+      let modal = $(this);
+      // remove modal footer
+      $(".modal-content.room-modal-content .modal-footer").remove();
+      // set modal content data
+      modal.find("#li-room-id").text(`Room ID: ${data.room_id}`);
+      modal.find("#li-room-name").text(`Room Name: ${data.room_name}`);
+      modal.find("#li-room-status").text(`Room Status: ${data.status}`);
+      modal.find("#li-room-note").text(`Room Note: ${data.note}`);
+      modal.find("#li-room-type").text(`Room Type: ${data.type_name}`);
+
+      let modalFooter;
+      switch (data.status) {
+        case "Available":
+          modalFooter = `<div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                          <a class="btn btn-primary" href="/reservations/new">Create Reservation</a>
+                        </div>`;
+          break;
+        case "Unavailable":
+          modalFooter = `<div class="modal-footer">
+                          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                          <a class="btn btn-primary" href="/receipts/new">Create Receipt</a>
+                        </div>`;
+          break;
+        default:
+          break;
+      }
+      // add modal footer
+      $(".modal-content.room-modal-content").append(modalFooter);
+    });
 
     </script>
 {{/section}}
