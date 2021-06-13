@@ -1,5 +1,6 @@
 const reservationModel = require('../models/reservation.model');
 const customerModel = require('../models/customer.model');
+const roomModel = require('../models/room.model');
 
 const addReservation = async (req, res) => {
   try {
@@ -44,8 +45,17 @@ const renderReservationsPage = async (req, res) => {
   });
 }
 
+const renderNewReservationPage = async (req, res) =>{
+  const availableRooms = await roomModel.getAvailableRooms();
+  res.render("management/add/reservation", {
+    activeMenu: "reservation-item",
+    availableRooms: availableRooms
+  });
+}
+
 module.exports = {
   addReservation,
   getReservation,
-  renderReservationsPage
+  renderReservationsPage,
+  renderNewReservationPage
 }

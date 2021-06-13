@@ -5,6 +5,8 @@ const Validator = require('../middlewares/validator.mdw');
 // render reservations page
 router.get("/", reservationController.renderReservationsPage);
 
+router.get('/new', reservationController.renderNewReservationPage);
+
 // create new reservation
 router.post('/',
   Validator.validate('reservation'),

@@ -11,6 +11,15 @@ module.exports = {
       throw Error(e);
     }
   },
+  getAvailableRooms: async () =>{
+    try {
+      return knex('room')
+          .select("room_id", "room_name")
+          .where("status", CONST.ROOM_STATUS.AVAILABLE);
+    } catch (e) {
+      throw Error(e);
+    }
+  },
   getRoomById: async (roomId) => {
     let room = [];
     try {
