@@ -103,15 +103,16 @@
         console.log(data);
         Swal.fire({
           icon: 'success',
-          title: 'The film has been deleted',
+          title: 'Success',
+          text: "The room has been deleted",
           showConfirmButton: false,
           timer: 2000
         })
       }).fail((error) => {
         console.log(error);
         Swal.fire({
-          title: 'Oops...',
-          text: error.statusText,
+          title: "Oops...",
+          text: "Something went wrong!",
           icon: 'error',
           confirmButtonText: 'Sad'
         })

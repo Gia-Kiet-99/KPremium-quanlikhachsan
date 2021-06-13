@@ -9,7 +9,7 @@ const addReservation = async (req, res) => {
     await customerModel.inputCustomers(customers);
     const result = await reservationModel.createReservation(roomId, customers);
     if (result) {
-      return res.json(result);
+      res.redirect("/");
     }
   } catch (e) {
     console.log(e);
