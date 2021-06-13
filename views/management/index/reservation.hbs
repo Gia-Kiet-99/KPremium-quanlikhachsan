@@ -34,7 +34,7 @@
           </thead>
           <tbody>
           {{#each reservations}}
-            <tr>
+            <tr id="{{this.id}}">
               <th scope="row">{{this.id}}</th>
               <td>{{this.room_name}}</td>
               <td>{{this.check_in_time}}</td>
@@ -43,7 +43,7 @@
                 <button class="btn py-0 px-1">
                   <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
                 </button>
-                <button class="btn py-0 px-1">
+                <button class="btn py-0 px-1" onclick="confirmDelete('{{this.id}}')">
                   <i class="far fa-trash-alt fa-sm"></i>
                 </button>
               </td>
@@ -58,8 +58,62 @@
 </div>
 
 {{#section "script"}}
-  <!-- Datatables -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Datatables -->
   <script src="/js/demo/datatables-demo.js"></script>
   <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+  <script>
+      function confirmDelete(reservationId) {
+          const swalWithBootstrapButtons = Swal.mixin({
+              customClass: {
+                  confirmButton: 'btn btn-danger mr-3',
+                  cancelButton: 'btn btn-light'
+              },
+              buttonsStyling: false
+          })
+
+          swalWithBootstrapButtons.fire({
+              title: 'Are you sure?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, delete it!',
+              cancelButtonText: 'No, cancel!',
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  deleteReservation(reservationId);
+              }
+          })
+      }
+
+      function deleteReservation(reservationId) {
+          const protocol = window.location.protocol;
+          const host = window.location.hostname;
+          const port = window.location.port;
+          const baseUrl = protocol + "//" + host + ":" + port;
+          $.ajax({
+              url: `${baseUrl}/reservations/${reservationId}`,
+              type: 'DELETE'
+          }).done((data) => {
+              $(`#${reservationId}`).remove();
+              console.log(data);
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Reservation has been deleted',
+                  showConfirmButton: false,
+                  timer: 2000
+              })
+          }).fail((error) => {
+              console.log(error);
+              Swal.fire({
+                  title: 'Oops...',
+                  text: error.statusText,
+                  icon: 'error',
+                  confirmButtonText: 'Sad'
+              })
+          })
+      }
+  </script>
 {{/section}}

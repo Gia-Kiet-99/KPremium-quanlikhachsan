@@ -72,10 +72,20 @@ const getAll = async () => {
   }
 }
 
+const removeReservation = async (reservationId) => {
+  try{
+    await knex('customer_reservation').where('reservation_id', reservationId).del();
+    return await knex("reservation").where("id", reservationId).del();
+  } catch (e) {
+    throw Error(e);
+  }
+}
 module.exports = {
   createReservation,
   getReservation,
   isUnpaid,
   preparePayment,
-  getAll
+  getAll,
+  removeReservation
+
 }

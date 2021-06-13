@@ -18,6 +18,7 @@ const addReservation = async (req, res) => {
     })
   }
 }
+
 const getReservation = async (req, res) => {
   try {
     const reservationId = req.params.reservationId;
@@ -53,9 +54,22 @@ const renderNewReservationPage = async (req, res) =>{
   });
 }
 
+const removeReservation = async (req, res) => {
+  const reservationId = req.params.reservationId;
+
+  const ret = await reservationModel.removeReservation(reservationId);
+  if (!ret) {
+    return res.status(400).json({
+      error_message: "reservation not found"
+    });
+  }
+  res.json(ret);
+}
+
 module.exports = {
   addReservation,
   getReservation,
   renderReservationsPage,
-  renderNewReservationPage
+  renderNewReservationPage,
+  removeReservation
 }
