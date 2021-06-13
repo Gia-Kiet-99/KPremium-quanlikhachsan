@@ -16,5 +16,7 @@ router.post('/',
 // get reservation by id
 router.get('/:reservationId', reservationController.getReservation);
 
+//
+router.delete('/:reservationId', reservationController.removeReservation);
 
 module.exports = router;
