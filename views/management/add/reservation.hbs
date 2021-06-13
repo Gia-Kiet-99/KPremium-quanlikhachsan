@@ -1,0 +1,152 @@
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-10 mt-3">
+            <div class="card shadow">
+
+                <h3 class="card-header">
+                    <i class="fas fa-scroll"></i>
+                    &nbsp; New Reservation
+                </h3>
+
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="room-name">Room</label>
+                            <select id="room-id" class="custom-select">
+                                <option disabled selected>Choose Room</option>
+                                {{#each availableRooms}}
+                                    <option value="{{this.room_id}}">{{this.room_name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="room-type">Customers</label>
+                            <button type="button" id="btnCustomer" class="btn btn-outline-primary ml-2 mb-2">
+                                <i class="fas fa-user"></i>
+                                Add Customer
+                            </button>
+                            <table class="table table-hover" id="table_id" style="table-layout: fixed;">
+                                <thead>
+                                <tr>
+                                    <th class="col-2" scope="col">ID Card Number</th>
+                                    <th class="col-3" scope="col">Name</th>
+                                    <th class="col-4" scope="col">Address</th>
+                                    <th class="col-3" scope="col">Customer Type</th>
+                                </tr>
+                                </thead>
+                                <tbody id="customerTable">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <button type="button" id="btnReservation" class="btn btn-outline-success">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            Add Reservation
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{#section "script"}}
+
+    <!-- Sweetalert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script type="application/javascript">
+
+        let customersArray = [];
+        $('#btnCustomer').on('click', () => {
+            Swal.fire({
+                title: 'Add Customer',
+                html: `<input type="text" id="idNumber" class="swal2-input" placeholder="Id Card Number">
+                    <input type="text" id="name" class="swal2-input" placeholder="Name">
+                    <input type="text" id="address" class="swal2-input" placeholder="Address">
+                    <select id="cus-type" class="swal2-input">
+                        <option disabled selected>Customer Type</option>
+                        <option value="1">Domestic Customer</option>
+                        <option value="2">Foreign Customer</option>
+                    </select>
+                        `,
+                confirmButtonText: 'Add',
+                focusConfirm: false,
+                preConfirm: () => {
+                    const id_card_number = Swal.getPopup().querySelector('#idNumber').value
+                    const name = Swal.getPopup().querySelector('#name').value
+                    const address = Swal.getPopup().querySelector('#address').value
+                    const type = parseInt(Swal.getPopup().querySelector('#cus-type').value)
+                    if (!id_card_number || !name || !address || !type) {
+                        Swal.showValidationMessage(`Please fill all fields!`)
+                    }
+                    return {id_card_number, name, address, type}
+                }
+            }).then((result) => {
+                customersArray.push(result.value);
+                updateTable();
+            })
+        })
+
+        function updateTable() {
+            $('#customerTable').html('');
+            for (const customer of customersArray) {
+                const tr = `
+                <tr id="${customer.id_card_number}">
+                       <th scope="row">${customer.id_card_number}</th>
+                       <td>${customer.name}</td>
+                       <td>${customer.address}</td>
+                       <td>${customer.type==1?"Domestic Customer" : "Foreign Customer"}</td>
+                </tr>
+                `
+                $('#customerTable').prepend(tr);
+            }
+
+        }
+
+        $("#btnReservation").on("click", () => {
+            const room_id = parseInt($("#room-id").val());
+            const dataToPost = {
+                room_id: room_id,
+                customers: customersArray,
+            };
+            const jsonToPost = JSON.stringify(dataToPost);
+            addReservation(jsonToPost);
+        });
+
+        function addReservation(data) {
+            const protocol = window.location.protocol;
+            const host = window.location.hostname;
+            const port = window.location.port;
+            const baseUrl = protocol + "//" + host + ":" + port;
+
+            $.ajax({
+                url: `${baseUrl}/reservations`,
+                type: "POST",
+                dataType: "json",
+                data: data,
+                contentType: "application/json"
+            }).done(function (data) {
+                console.log(data);
+                Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                window.location.replace(`${baseUrl}/reservations`);
+            }).fail(function (error) {
+                console.log(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            })
+        }
+
+    </script>
+{{/section}}
