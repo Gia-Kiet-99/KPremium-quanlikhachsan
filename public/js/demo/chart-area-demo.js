@@ -28,10 +28,9 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 // Area Chart Example
-let ctx1 = document.getElementById("myAreaChart");
-let myLineChart;
 function showAreaChart(labels, data) {
-  myLineChart = new Chart(ctx1, {
+  let ctx1 = document.getElementById("myAreaChart");
+  let myLineChart = new Chart(ctx1, {
     type: 'line',
     data: {
       labels: labels,
@@ -80,7 +79,7 @@ function showAreaChart(labels, data) {
             padding: 10,
             // Include a dollar sign in the ticks
             callback: function (value, index, values) {
-              return '$' + number_format(value);
+              return 'VND ' + number_format(value);
             }
           },
           gridLines: {

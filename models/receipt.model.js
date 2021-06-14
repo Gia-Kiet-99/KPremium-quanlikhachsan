@@ -33,11 +33,11 @@ const getAll = async () => {
       .innerJoin('room_type', 'room.room_type', 'room_type.type_id')
       .select("receipt.id", "room_name", "type_name", "check_in_time", "check_out_time", "total_price");
   } catch (e) {
-    throw Error(e);
+    throw new Error(e);
   }
 }
 
 module.exports = {
   createReceipt,
-  getAll
+  getAll,
 }
