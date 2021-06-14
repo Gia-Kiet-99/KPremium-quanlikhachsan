@@ -3,20 +3,35 @@ const router = express.Router();
 
 const roomController = require('../controllers/room.controller');
 const validator = require('../middlewares/validator.mdw');
+const {isManager} = require("../middlewares/auth.mdw");
 
 // rooms array
 router.get('/', roomController.getAllRooms);
 // render new room view
-router.get("/new", roomController.renderNewRoomView);
+router.get("/new",
+  isManager,
+  roomController.renderNewRoomView
+);
 // room obj
-router.get('/:roomId', roomController.renderUpdateRoomPage);
+router.get('/:roomId',
+  isManager,
+  roomController.renderUpdateRoomPage
+);
 router.patch("/:roomId",
+  isManager,
   validator.validate("room"),
   roomController.updateRoomInfo
 );
-router.delete("/:roomId", roomController.removeRoom);
+router.delete("/:roomId",
+  isManager,
+  roomController.removeRoom
+);
 // room obj
-router.post('/', validator.validate('room'), roomController.addRoom);
+router.post('/',
+  isManager,
+  validator.validate('room'),
+  roomController.addRoom
+);
 // num
 router.get('/:roomId/rate', roomController.getRate);
 // num
