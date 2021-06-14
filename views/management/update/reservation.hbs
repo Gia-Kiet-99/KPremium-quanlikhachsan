@@ -3,12 +3,18 @@
         <div class="col-sm-10 mt-3">
             <div class="card shadow">
 
-                <h3 class="card-header">
-                    <i class="fas fa-scroll"></i>
-                    &nbsp; Update Reservation: {{reservation.id}}
+                <h3 class="card-header d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="fas fa-scroll"></i>
+                        &nbsp; Reservation: {{reservation.id}}
+                    </span>
+                    <button type="button" class="btn btn-info btn-lg" id="btnCheckout" onclick="confirmCheckOut('{{reservation.id}}')">
+                        <i class="fas fa-money-bill"></i> Check out
+                    </button>
                 </h3>
 
                 <div class="card-body">
+
                     <div class="row mb-3">
                         <div class="col-lg-6">
                             <h5 class="card-title">Checked In Time</h5>
@@ -69,7 +75,6 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/x-handlebars-template" id="getCustomers">
      {{json customers}}
-
     </script>
     <script type="application/javascript">
 
@@ -79,7 +84,71 @@
             $('#room-id').val("{{reservation.room_id}}");
             customersArray = JSON.parse(customers.replace(/&quot;/g, '"'));
             updateTable();
-        })
+            {{#if (isPaid reservation.status)}}
+                $('#room-id').attr('disabled', true);
+                $('#btnCustomer').hide();
+                $('#btnReservation').hide();
+                $('#btnCheckout').hide();
+            {{/if}}
+        });
+
+        function confirmCheckOut(reservationId){
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-primary mr-3',
+                    cancelButton: 'btn btn-light'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Check out this reservation?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes!',
+                cancelButtonText: 'Nah!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    makePayment(reservationId);
+                }
+            })
+        }
+
+        function makePayment(reservationId) {
+            const protocol = window.location.protocol;
+            const host = window.location.hostname;
+            const port = window.location.port;
+            const baseUrl = protocol + "//" + host + ":" + port;
+            const dataToPost = {
+                reservation_id: parseInt(reservationId),
+            };
+            const jsonToPost = JSON.stringify(dataToPost);
+            $.ajax({
+                url: `${baseUrl}/receipts/`,
+                type: 'POST',
+                dataType: "json",
+                data: jsonToPost,
+                contentType: "application/json"
+            }).done((data) => {
+                console.log(data);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Checked out',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+                location.reload();
+            }).fail((error) => {
+                console.log(error);
+                Swal.fire({
+                    title: 'Oops...',
+                    text: error.statusText,
+                    icon: 'error',
+                    confirmButtonText: 'Sad'
+                })
+            })
+        }
+
         $('#btnCustomer').on('click', () => {
             Swal.fire({
                 title: 'Add Customer',
@@ -121,7 +190,9 @@
                        <td>${customer.name}</td>
                        <td>${customer.address}</td>
                        <td>${customer.type == 1 ? "Domestic Customer" : "Foreign Customer"}</td>
+                       {{#if (isUnpaid reservation.status)}}
                        <td class="text-center"><button class="btn py-0 px-1" onclick="remove(${index})"><i class="fas fa-minus text-danger"></i></button></td>
+                        {{/if}}
                 </tr>
                 `
                 $('#customerTable').prepend(tr);
