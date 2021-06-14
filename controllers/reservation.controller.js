@@ -19,6 +19,24 @@ const addReservation = async (req, res) => {
   }
 }
 
+const updateReservation = async (req, res) => {
+	try {
+		const reservationId = req.params.reservationId;
+		const roomId = req.body.room_id;
+		const customers = req.body.customers;
+		await customerModel.inputCustomers(customers);
+		const result = await reservationModel.updateReservationById(reservationId, roomId, customers);
+		if (result) {
+			return res.json(result);
+		}
+	} catch (e) {
+		console.log(e);
+		res.status(400).json({
+			error: 'cannot update reservation'
+		})
+	}
+}
+
 const getReservation = async (req, res) => {
   try {
     const reservationId = req.params.reservationId;
@@ -46,7 +64,7 @@ const renderReservationsPage = async (req, res) => {
   });
 }
 
-const renderNewReservationPage = async (req, res) =>{
+const renderNewReservationPage = async (req, res) => {
   const availableRooms = await roomModel.getAvailableRooms();
   res.render("management/add/reservation", {
     activeMenu: "reservation-item",
@@ -54,9 +72,22 @@ const renderNewReservationPage = async (req, res) =>{
   });
 }
 
+const renderUpdateReservationPage = async (req, res) => {
+  const reservationId = req.params.reservationId;
+  const reservation = await reservationModel.getReservation(reservationId);
+  console.log(reservation);
+  const customers = await customerModel.getCustomersByReservationId(reservationId);
+  const availableRooms = await roomModel.getAvailableRooms();
+  res.render("management/update/reservation", {
+    activeMenu: "reservation-item",
+    availableRooms: availableRooms,
+    customers: customers,
+    reservation: reservation
+  });
+}
+
 const removeReservation = async (req, res) => {
   const reservationId = req.params.reservationId;
-
   const ret = await reservationModel.removeReservation(reservationId);
   if (!ret) {
     return res.status(400).json({
@@ -71,5 +102,7 @@ module.exports = {
   getReservation,
   renderReservationsPage,
   renderNewReservationPage,
-  removeReservation
+  removeReservation,
+  renderUpdateReservationPage,
+	updateReservation
 }

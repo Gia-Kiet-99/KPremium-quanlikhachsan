@@ -55,4 +55,21 @@ const getSurchargeNumberByReservationId = async (reservationId) => {
     return customers[0].surcharge;
   }
 }
-module.exports = {getAllCustomersFromDb, inputCustomers, addCustomer, getSurchargeNumberByReservationId}
+const getCustomersByReservationId = async (reservationId) => {
+  try {
+    const customers = await knex('customer')
+        .innerJoin('customer_reservation', 'customer.id_card_number', 'customer_reservation.customer_id')
+        .where('customer_reservation.reservation_id', reservationId)
+        .select('id_card_number', 'name', 'address', 'type')
+    return customers;
+  } catch (e) {
+    throw Error(e);
+  }
+}
+module.exports = {
+  getAllCustomersFromDb,
+  inputCustomers,
+  addCustomer,
+  getSurchargeNumberByReservationId,
+  getCustomersByReservationId
+}
