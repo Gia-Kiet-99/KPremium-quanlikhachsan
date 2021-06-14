@@ -26,8 +26,7 @@ const hbs = handlebars.create({
     },
     json: function (obj) {
       return JSON.stringify(obj);
-    }
-
+    },
   }
 });
 

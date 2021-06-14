@@ -5,15 +5,26 @@
 
                 <h3 class="card-header">
                     <i class="fas fa-scroll"></i>
-                    &nbsp; New Reservation
+                    &nbsp; Update Reservation: {{reservation.id}}
                 </h3>
 
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-6">
+                            <h5 class="card-title">Checked In Time</h5>
+                            <p class="card-text">{{reservation.check_in_time}}</p>
+                        </div>
+                        <div class="col-lg-6">
+                            <h5 class="card-title">Status</h5>
+                            <p class="card-text">{{reservation.status}}</p>
+                        </div>
+                    </div>
                     <form>
                         <div class="form-group">
                             <label for="room-name">Room</label>
                             <select id="room-id" class="custom-select">
                                 <option disabled selected>Choose Room</option>
+                                <option value="{{reservation.room_id}}">{{reservation.room_name}}</option>
                                 {{#each availableRooms}}
                                     <option value="{{this.room_id}}">{{this.room_name}}</option>
                                 {{/each}}
@@ -42,7 +53,7 @@
 
                         <button type="button" id="btnReservation" class="btn btn-outline-success">
                             <i class="fa fa-check" aria-hidden="true"></i>
-                            Add Reservation
+                            Update Reservation
                         </button>
                     </form>
                 </div>
@@ -54,13 +65,21 @@
 </div>
 
 {{#section "script"}}
-
     <!-- Sweetalert -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/x-handlebars-template" id="getCustomers">
+     {{json customers}}
 
+    </script>
     <script type="application/javascript">
 
         let customersArray = [];
+        const customers = document.getElementById('getCustomers').innerText.trim();
+        $(document).ready(() => {
+            $('#room-id').val("{{reservation.room_id}}");
+            customersArray = JSON.parse(customers.replace(/&quot;/g, '"'));
+            updateTable();
+        })
         $('#btnCustomer').on('click', () => {
             Swal.fire({
                 title: 'Add Customer',
@@ -132,18 +151,18 @@
                 customers: customersArray,
             };
             const jsonToPost = JSON.stringify(dataToPost);
-            addReservation(jsonToPost);
+            updateReservation(jsonToPost);
         });
 
-        function addReservation(data) {
+        function updateReservation(data) {
             const protocol = window.location.protocol;
             const host = window.location.hostname;
             const port = window.location.port;
             const baseUrl = protocol + "//" + host + ":" + port;
 
             $.ajax({
-                url: `${baseUrl}/reservations`,
-                type: "POST",
+                url: `${baseUrl}/reservations/{{reservation.id}}`,
+                type: "PATCH",
                 dataType: "json",
                 data: data,
                 contentType: "application/json"
@@ -155,10 +174,6 @@
                     showConfirmButton: false,
                     timer: 2000
                 });
-<<<<<<< HEAD
-                window.location.assign(`${baseUrl}/reservations`);
-=======
->>>>>>> 35e03ba2db55d27e8c588d48ef190ab1021c1b14
             }).fail(function (error) {
                 console.log(error);
                 Swal.fire({
