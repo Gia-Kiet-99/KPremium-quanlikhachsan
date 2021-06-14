@@ -30,7 +30,7 @@
             <th class="col-3">Check in Time</th>
             <th class="col-3">Check out Time</th>
             <th>Total Price</th>
-            <th>Options</th>
+<!--            <th>Options</th>-->
           </tr>
           </thead>
           <tbody>
@@ -41,15 +41,15 @@
               <td>{{this.type_name}}</td>
               <td>{{this.check_in_time}}</td>
               <td>{{this.check_out_time}}</td>
-              <td>{{this.total_price}}</td>
-              <td>
-                <button class="btn py-0 px-1">
-                  <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
-                </button>
-                <button class="btn py-0 px-1">
-                  <i class="far fa-trash-alt fa-sm"></i>
-                </button>
-              </td>
+              <td>{{this.total_price}}₫</td>
+<!--              <td>-->
+<!--                <button class="btn py-0 px-1">-->
+<!--                  <i class="far fa-edit fa-sm" style="color: #4e73df"></i>-->
+<!--                </button>-->
+<!--                <button class="btn py-0 px-1">-->
+<!--                  <i class="far fa-trash-alt fa-sm"></i>-->
+<!--                </button>-->
+<!--              </td>-->
             </tr>
           {{/each}}
           </tbody>

@@ -60,7 +60,7 @@ const preparePayment = async (reservationId) => {
 			await knex('reservation')
 				.update({status: CONST.RESERVATION_STATUS.PAID})
 				.where('id', reservationId);
-			return roomRate;
+			return {roomRate: roomRate, check_in_time: reservation.check_in_time};
 		}
 	}
 	return null;

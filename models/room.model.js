@@ -6,7 +6,7 @@ module.exports = {
     try {
       return knex('room')
         .join('room_type', 'room.room_type', '=', 'room_type.type_id')
-        .select("room_id", "room_name", "status", "note", "type_name");
+        .select("room_id", "room_name", "status", "note", "type_name", "room_rate");
     } catch (e) {
       throw Error(e);
     }
