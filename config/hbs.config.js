@@ -18,6 +18,9 @@ const hbs = handlebars.create({
     isFixing: function (value) {
       return value === "Fixing";
     },
+    isUnpaid: function (value) {
+      return value === "Unpaid";
+    },
     equal: function (a, b) {
       return a === b;
     },

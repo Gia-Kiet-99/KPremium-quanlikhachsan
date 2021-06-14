@@ -39,6 +39,7 @@
               <td>{{this.room_name}}</td>
               <td>{{this.check_in_time}}</td>
               <td>{{this.status}}</td>
+                {{#if (isUnpaid this.status)}}
               <td>
                 <button class="btn py-0 px-1">
                   <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
@@ -47,6 +48,9 @@
                   <i class="far fa-trash-alt fa-sm"></i>
                 </button>
               </td>
+                {{else}}
+                    <td/>
+                {{/if}}
             </tr>
           {{/each}}
           </tbody>
