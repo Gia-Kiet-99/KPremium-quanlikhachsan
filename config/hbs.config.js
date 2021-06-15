@@ -21,6 +21,9 @@ const hbs = handlebars.create({
     isUnpaid: function (value) {
       return value === "Unpaid";
     },
+    isPaid: function (value) {
+      return value === "Paid";
+    },
     equal: function (a, b) {
       return a === b;
     },

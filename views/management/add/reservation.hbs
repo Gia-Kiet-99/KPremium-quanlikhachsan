@@ -87,8 +87,18 @@
                 }
             }).then((result) => {
                 if (!checkExisted(result.value.id_card_number)) {
+                	if(customersArray.length>=3){
+                        Swal.fire({
+                            icon: "error",
+                            title: "Cannot add more than 3 people",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    }
+                	else{
                     customersArray.push(result.value);
                     updateTable();
+                	}
                 }
             })
         })
@@ -155,10 +165,7 @@
                     showConfirmButton: false,
                     timer: 2000
                 });
-<<<<<<< HEAD
                 window.location.assign(`${baseUrl}/reservations`);
-=======
->>>>>>> 35e03ba2db55d27e8c588d48ef190ab1021c1b14
             }).fail(function (error) {
                 console.log(error);
                 Swal.fire({

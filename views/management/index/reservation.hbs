@@ -1,123 +1,185 @@
 <div class="container-fluid">
 
-  <div class="row my-3">
-    <div class="col-sm-6">
-      <!-- Page Heading -->
-      <h1 class="h3 mb-2 text-gray-800">Reservation</h1>
+    <div class="row my-3">
+        <div class="col-sm-6">
+            <!-- Page Heading -->
+            <h1 class="h3 mb-2 text-gray-800">Reservation</h1>
+        </div>
+        <div class="col-sm-6 text-right">
+            <a role="button" href="/reservations/new"
+               class="btn font-weight-bold text-gray-100"
+               style="background-color: #4e73df;">
+                Create New Reservation
+            </a>
+        </div>
     </div>
-    <div class="col-sm-6 text-right">
-      <a role="button" href="/reservations/new"
-         class="btn font-weight-bold text-gray-100"
-         style="background-color: #4e73df;">
-        Create New Reservation
-      </a>
-    </div>
-  </div>
 
-  <!-- DataTales Example -->
-  <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Reservation table</h6>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Reservation table</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="col-1">ID</th>
+                        <th>Room Name</th>
+                        <th class="col-4">Check In Time</th>
+                        <th class="col-2">Status</th>
+                        <!--            <th class="col-2">Customer</th>-->
+                        <th class="col-2">Options</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each reservations}}
+                        <tr id="{{this.id}}">
+                            <th scope="row">{{this.id}}</th>
+                            <td>{{this.room_name}}</td>
+                            <td>{{this.check_in_time}}</td>
+                            <td>{{this.status}}</td>
+
+                            <td>
+                                {{#if (isUnpaid this.status)}}
+                                    <button class="btn py-0 px-1" onclick="confirmCheckOut('{{this.id}}')">
+                                        <i class="fas fa-receipt" style="color: rgb(60, 179, 113)"></i>
+                                    </button>
+                                {{/if}}
+                                <a class="btn py-0 px-1" href="/reservations/{{this.id}}">
+                                    <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
+                                </a>
+                                {{#if (isUnpaid this.status)}}
+                                    <button class="btn py-0 px-1" onclick="confirmDelete('{{this.id}}')">
+                                        <i class="far fa-trash-alt fa-sm"></i>
+                                    </button>
+                                {{/if}}
+                            </td>
+
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-          <thead>
-          <tr>
-            <th class="col-1">ID</th>
-            <th>Room Name</th>
-            <th class="col-4">Check In Time</th>
-            <th class="col-2">Status</th>
-<!--            <th class="col-2">Customer</th>-->
-            <th class="col-2">Options</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each reservations}}
-            <tr id="{{this.id}}">
-              <th scope="row">{{this.id}}</th>
-              <td>{{this.room_name}}</td>
-              <td>{{this.check_in_time}}</td>
-              <td>{{this.status}}</td>
-                {{#if (isUnpaid this.status)}}
-              <td>
-                <button class="btn py-0 px-1">
-                  <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
-                </button>
-                <button class="btn py-0 px-1" onclick="confirmDelete('{{this.id}}')">
-                  <i class="far fa-trash-alt fa-sm"></i>
-                </button>
-              </td>
-                {{else}}
-                    <td/>
-                {{/if}}
-            </tr>
-          {{/each}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
 
 </div>
 
 {{#section "script"}}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Datatables -->
-  <script src="/js/demo/datatables-demo.js"></script>
-  <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
-  <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/js/demo/datatables-demo.js"></script>
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-  <script>
-      function confirmDelete(reservationId) {
-          const swalWithBootstrapButtons = Swal.mixin({
-              customClass: {
-                  confirmButton: 'btn btn-danger mr-3',
-                  cancelButton: 'btn btn-light'
-              },
-              buttonsStyling: false
-          })
+    <script>
+        function confirmCheckOut(reservationId){
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-primary mr-3',
+                    cancelButton: 'btn btn-light'
+                },
+                buttonsStyling: false
+            })
 
-          swalWithBootstrapButtons.fire({
-              title: 'Are you sure?',
-              text: "You won't be able to revert this!",
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonText: 'Yes, delete it!',
-              cancelButtonText: 'No, cancel!',
-          }).then((result) => {
-              if (result.isConfirmed) {
-                  deleteReservation(reservationId);
-              }
-          })
-      }
+            swalWithBootstrapButtons.fire({
+                title: 'Check out this reservation?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes!',
+                cancelButtonText: 'Nah!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    makePayment(reservationId);
+                }
+            })
+        }
 
-      function deleteReservation(reservationId) {
-          const protocol = window.location.protocol;
-          const host = window.location.hostname;
-          const port = window.location.port;
-          const baseUrl = protocol + "//" + host + ":" + port;
-          $.ajax({
-              url: `${baseUrl}/reservations/${reservationId}`,
-              type: 'DELETE'
-          }).done((data) => {
-              $(`#${reservationId}`).remove();
-              console.log(data);
-              Swal.fire({
-                  icon: 'success',
-                  title: 'Reservation has been deleted',
-                  showConfirmButton: false,
-                  timer: 2000
-              })
-          }).fail((error) => {
-              console.log(error);
-              Swal.fire({
-                  title: 'Oops...',
-                  text: error.statusText,
-                  icon: 'error',
-                  confirmButtonText: 'Sad'
-              })
-          })
-      }
-  </script>
+        function makePayment(reservationId) {
+            const protocol = window.location.protocol;
+            const host = window.location.hostname;
+            const port = window.location.port;
+            const baseUrl = protocol + "//" + host + ":" + port;
+            const dataToPost = {
+                reservation_id: parseInt(reservationId),
+            };
+            const jsonToPost = JSON.stringify(dataToPost);
+            $.ajax({
+                url: `${baseUrl}/receipts/`,
+                type: 'POST',
+                dataType: "json",
+                data: jsonToPost,
+                contentType: "application/json"
+            }).done((data) => {
+                console.log(data);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Checked out',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+                location.reload();
+            }).fail((error) => {
+                console.log(error);
+                Swal.fire({
+                    title: 'Oops...',
+                    text: error.statusText,
+                    icon: 'error',
+                    confirmButtonText: 'Sad'
+                })
+            })
+        }
+
+        function confirmDelete(reservationId) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-danger mr-3',
+                    cancelButton: 'btn btn-light'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteReservation(reservationId);
+                }
+            })
+        }
+
+        function deleteReservation(reservationId) {
+            const protocol = window.location.protocol;
+            const host = window.location.hostname;
+            const port = window.location.port;
+            const baseUrl = protocol + "//" + host + ":" + port;
+            $.ajax({
+                url: `${baseUrl}/reservations/${reservationId}`,
+                type: 'DELETE'
+            }).done((data) => {
+                $(`#${reservationId}`).remove();
+                console.log(data);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Reservation has been deleted',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+            }).fail((error) => {
+                console.log(error);
+                Swal.fire({
+                    title: 'Oops...',
+                    text: error.statusText,
+                    icon: 'error',
+                    confirmButtonText: 'Sad'
+                })
+            })
+        }
+    </script>
 {{/section}}

@@ -14,16 +14,35 @@
 
       <!-- Area Chart -->
       <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Area Chart</h6>
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-weight-bold text-primary">Monthly Revenue</h6>
+          <div class="form-group mb-0">
+            <input type="month" name="month-picker" min="1970-01" class="form-control"
+                   onchange="fetchData(this.value)">
+          </div>
         </div>
         <div class="card-body">
-          <div class="chart-area">
+          <div class="chart-area" id="area-chart-container">
             <canvas id="myAreaChart"></canvas>
           </div>
           <hr>
-          Styling for the area chart can be found in the
-          <code>/js/demo/chart-area-demo.js</code> file.
+          <div class="row">
+            <h6 class="col-6">
+              <strong>Total Revenue:</strong>
+              <span id="total-revenue">{{totalRevenue}}</span>
+            </h6>
+          </div>
+          <table class="table table-hover table-borderless">
+            <thead>
+            <tr>
+              <th class="px-0" scope="col">Room Type</th>
+              <th scope="col">Revenue (VND)</th>
+              <th scope="col">Ratio</th>
+            </tr>
+            </thead>
+            <tbody id="revenue-detail">
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -74,10 +93,105 @@
   <script src="/js/demo/chart-pie-demo.js"></script>
   <script src="/js/demo/chart-bar-demo.js"></script>
 
-  <script type="application/javascript">
-    showAreaChart(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
-      [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 10000, 0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 10000, 100000, 10000, 5000, 15000, 10000, 20000]);
-    showPieChart(["Direct", "Referral", "Social"], [100,100,100]);
+  <script id="revenueOfCurrentMonth" type="text/x-handlebars-template">{{json revenueOfCurrentMonth}}</script>
+
+  <script type="text/javascript">
+    /* Declare variables below this line */
+    const jsonString = document.getElementById("revenueOfCurrentMonth")
+      .innerText.trim().replace(/&quot;/g, '"');
+    const revenueOfCurrentMonth = JSON.parse(jsonString);
+
+    /* Declare function below this line */
+    function resetChart() {
+      $("#myAreaChart").remove();
+      $("#area-chart-container").append('<canvas id="myAreaChart"></canvas>');
+    }
+
+    function showRevenueChart(revenue) {
+      // remove current chart
+      resetChart();
+      // get date number of the month
+      const date = new Date();
+      const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+
+      const labels = [];
+      const data = [];
+      for (let i = 1; i <= daysInMonth; i++) {
+        labels.push(i + "");
+        data.push(0);
+      }
+      // create data for chart
+      let d;
+      for (const e of revenue) {
+        d = new Date(e.check_out_time).getDate();
+        data[d - 1] += e.total_price;
+      }
+      data.splice(d + 1); // remove the rest of the month
+
+      // show chart
+      showAreaChart(labels, data);
+      showRevenueDetail(revenue);
+      // showPieChart(["Direct", "Referral", "Social"], [100, 100, 100]);
+    }
+
+    function showRevenueDetail(revenue) {
+      const container = $("#revenue-detail");
+      container.empty();
+
+      if (revenue.length === 0) {
+        return;
+      }
+
+      const totalRevenue = revenue.reduce((sum, value) => {
+        return sum += value.total_price;
+      }, 0);
+      const data = revenue.reduce((result, value) => {
+        if (result && result.hasOwnProperty(value.type_name)) {
+          result[value.type_name].totalRoomRevenue += value.total_price;
+        } else {
+          result[value.type_name] = {
+            totalRoomRevenue: value.total_price
+          }
+        }
+        return result;
+      }, {});
+      let content = "";
+      for (const typeName of Object.keys(data)) {
+        content += `<tr>
+                      <th scope="row">${typeName}</th>
+                      <td>${numberWithDot(data[typeName].totalRoomRevenue)}</td>
+                      <td>${Math.round((data[typeName].totalRoomRevenue / totalRevenue) * 100) / 100}</td>
+                    </tr>`
+      }
+      container.html(content);
+    }
+
+    function fetchData(value) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
+
+      const month = value.split("-")[1];
+      const year = value.split("-")[0];
+      $.ajax({
+        url: `${baseUrl}/statistics/monthly-revenue?month=${month}&year=${year}`,
+        type: "GET",
+        contentType: "application/json"
+      }).done(data => {
+        // console.log(data);
+        showRevenueChart(data.revenue);
+        $("#total-revenue").text(data.total);
+      }).fail(error => {
+        console.error(error);
+      });
+    }
+
+    function numberWithDot(x) {
+      return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    showRevenueChart(revenueOfCurrentMonth);
   </script>
 
 {{/section}}
