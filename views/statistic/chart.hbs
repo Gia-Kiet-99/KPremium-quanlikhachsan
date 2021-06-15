@@ -1,24 +1,20 @@
 <div class="container-fluid">
 
   <!-- Page Heading -->
-  <h1 class="h3 mb-2 text-gray-800">Charts</h1>
-  <p class="mb-4">Chart.js is a third party plugin that is used to generate the charts in this theme.
-    The charts below have been customized - for further customization options, please visit the <a
-      target="_blank" href="https://www.chartjs.org/docs/latest/">official Chart.js
-      documentation</a>.</p>
+  <h1 class="h3 mb-2 text-gray-800">Monthly Statistic</h1>
 
   <!-- Content Row -->
   <div class="row">
 
-    <div class="col-xl-8 col-lg-7">
+    <div class="col-xl-6 col-lg-6">
 
       <!-- Area Chart -->
       <div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h6 class="m-0 font-weight-bold text-primary">Monthly Revenue</h6>
           <div class="form-group mb-0">
-            <input type="month" name="month-picker" min="1970-01" class="form-control"
-                   onchange="fetchData(this.value)">
+            <input type="month" name="month-picker" min="1970-01" max="{{year}}-0{{month}}"
+                   class="form-control" value="{{year}}-0{{month}}" onchange="fetchRevenueData(this.value)">
           </div>
         </div>
         <div class="card-body">
@@ -32,52 +28,57 @@
               <span id="total-revenue">{{totalRevenue}}</span>
             </h6>
           </div>
-          <table class="table table-hover table-borderless">
-            <thead>
-            <tr>
-              <th class="px-0" scope="col">Room Type</th>
-              <th scope="col">Revenue (VND)</th>
-              <th scope="col">Ratio</th>
-            </tr>
-            </thead>
-            <tbody id="revenue-detail">
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless">
+              <thead>
+              <tr>
+                <th class="px-0" scope="col">Room Type</th>
+                <th scope="col">Revenue (VND)</th>
+                <th scope="col">Ratio</th>
+              </tr>
+              </thead>
+              <tbody id="revenue-detail">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+    </div>
 
-      <!-- Bar Chart -->
+    <!-- Bar Chart -->
+    <div class="col-xl-6 col-lg-6">
       <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-weight-bold text-primary">Room Usage Density</h6>
+          <div class="form-group mb-0">
+            <input type="month" name="month-picker" min="1970-01" max="{{year}}-0{{month}}"
+                   class="form-control" value="{{year}}-0{{month}}" onchange="fetchDensityData(this.value)">
+          </div>
         </div>
         <div class="card-body">
-          <div class="chart-bar">
+          <div class="chart-bar" id="bar-chart-container">
             <canvas id="myBarChart"></canvas>
           </div>
           <hr>
-          Styling for the bar chart can be found in the
-          <code>/js/demo/chart-bar-demo.js</code> file.
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Donut Chart -->
-    <div class="col-xl-4 col-lg-5">
-      <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
-        </div>
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="chart-pie pt-4">
-            <canvas id="myPieChart"></canvas>
+          <div class="row">
+            <h6 class="col-6">
+              <strong>Total Duration:</strong>
+              <span id="total-duration">{{totalDuration}} days</span>
+            </h6>
           </div>
-          <hr>
-          Styling for the donut chart can be found in the
-          <code>/js/demo/chart-pie-demo.js</code> file.
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless" id="densityTable" width="100%" cellspacing="0">
+              <thead>
+              <tr>
+                <th class="px-0" scope="col">Room Name</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Ratio</th>
+              </tr>
+              </thead>
+              <tbody id="density-detail">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -90,26 +91,38 @@
   <!-- Page level plugins -->
   <script src="/vendor/chart.js/Chart.min.js"></script>
   <script src="/js/demo/chart-area-demo.js"></script>
-  <script src="/js/demo/chart-pie-demo.js"></script>
   <script src="/js/demo/chart-bar-demo.js"></script>
 
+  <script src="/js/demo/datatables-demo.js"></script>
+  <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
   <script id="revenueOfCurrentMonth" type="text/x-handlebars-template">{{json revenueOfCurrentMonth}}</script>
+  <script id="densityOfCurrentMonth" type="text/x-handlebars-template">{{json roomUsageDensity}}</script>
 
   <script type="text/javascript">
     /* Declare variables below this line */
     const jsonString = document.getElementById("revenueOfCurrentMonth")
       .innerText.trim().replace(/&quot;/g, '"');
     const revenueOfCurrentMonth = JSON.parse(jsonString);
+    const densityString = document.getElementById("densityOfCurrentMonth")
+      .innerText.trim().replace(/&quot;/g, '"');
+    const densityOfCurrentMonth = JSON.parse(densityString);
 
     /* Declare function below this line */
-    function resetChart() {
+    function resetAreaChart() {
       $("#myAreaChart").remove();
       $("#area-chart-container").append('<canvas id="myAreaChart"></canvas>');
     }
 
-    function showRevenueChart(revenue) {
+    function resetBarChart() {
+      $("#myBarChart").remove();
+      $("#bar-chart-container").append('<canvas id="myBarChart"></canvas>');
+    }
+
+    function showRevenueStatistic(revenue) {
       // remove current chart
-      resetChart();
+      resetAreaChart();
       // get date number of the month
       const date = new Date();
       const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -131,17 +144,29 @@
       // show chart
       showAreaChart(labels, data);
       showRevenueDetail(revenue);
-      // showPieChart(["Direct", "Referral", "Social"], [100, 100, 100]);
+    }
+
+    function showDensityStatistic(densities) {
+      resetBarChart();
+
+      let labels = [], data = [];
+      for (const density of densities) {
+        labels.push(density.roomName);
+        data.push(density.duration);
+      }
+
+      console.log(labels, data);
+
+      showBarChart(labels, data);
+      showDensityDetail(densities);
     }
 
     function showRevenueDetail(revenue) {
       const container = $("#revenue-detail");
       container.empty();
-
       if (revenue.length === 0) {
         return;
       }
-
       const totalRevenue = revenue.reduce((sum, value) => {
         return sum += value.total_price;
       }, 0);
@@ -158,7 +183,7 @@
       let content = "";
       for (const typeName of Object.keys(data)) {
         content += `<tr>
-                      <th scope="row">${typeName}</th>
+                      <th class="px-0" scope="row">${typeName}</th>
                       <td>${numberWithDot(data[typeName].totalRoomRevenue)}</td>
                       <td>${Math.round((data[typeName].totalRoomRevenue / totalRevenue) * 100) / 100}</td>
                     </tr>`
@@ -166,7 +191,27 @@
       container.html(content);
     }
 
-    function fetchData(value) {
+    function showDensityDetail(densities) {
+      let content = "";
+      for (const d of densities) {
+        content += `<tr>
+                      <th class="px-0" scope="row">${d.roomName}</th>
+                      <td>${d.duration}</td>
+                      <td>${d.ratio}</td>
+                    </tr>`
+      }
+      $("#density-detail").html(content);
+      if (densities.length > 10) {
+        $("#densityTable").DataTable({
+          searching: false,
+          ordering: true,
+          bLengthChange: false,
+          bInfo: true
+        });
+      }
+    }
+
+    function fetchRevenueData(value) {
       const protocol = window.location.protocol;
       const host = window.location.hostname;
       const port = window.location.port;
@@ -180,8 +225,29 @@
         contentType: "application/json"
       }).done(data => {
         // console.log(data);
-        showRevenueChart(data.revenue);
+        showRevenueStatistic(data.revenue);
         $("#total-revenue").text(data.total);
+      }).fail(error => {
+        console.error(error);
+      });
+    }
+
+    function fetchDensityData(value) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
+
+      const month = value.split("-")[1];
+      const year = value.split("-")[0];
+      $.ajax({
+        url: `${baseUrl}/statistics/room-usage-density?month=${month}&year=${year}`,
+        type: "GET",
+        contentType: "application/json"
+      }).done(data => {
+        console.log(data);
+        showDensityStatistic(data.roomUsageDensity);
+        $("#total-duration").text(data.totalDuration);
       }).fail(error => {
         console.error(error);
       });
@@ -191,7 +257,8 @@
       return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
     }
 
-    showRevenueChart(revenueOfCurrentMonth);
+    showRevenueStatistic(revenueOfCurrentMonth);
+    showDensityStatistic(densityOfCurrentMonth);
   </script>
 
 {{/section}}
