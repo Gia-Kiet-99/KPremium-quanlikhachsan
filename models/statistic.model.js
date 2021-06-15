@@ -42,12 +42,12 @@ const getRoomUsageDensity = async (month, year) => {
           roomName: roomName,
           duration: Math.round((data[roomName] / (24 * 60 * 60 * 1000)) * 100) / 100,
           ratio: Math.round((data[roomName] / totalDuration) * 100) / 100
-        })
+        });
       }
+      ret.sort((a, b) => a.roomName.localeCompare(b.roomName));
     }
-
   } catch (e) {
-    throw new Error(e);
+    console.error(e);
   }
   return ret;
 }

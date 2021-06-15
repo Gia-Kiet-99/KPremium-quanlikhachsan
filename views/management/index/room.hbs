@@ -28,7 +28,7 @@
             <th class="col-3">Room Name</th>
             <th class="col-2">Status</th>
             <th class="col-2">Note</th>
-              <th class="col-2">Price</th>
+            <th class="col-2">Price</th>
             <th class="col-1">Room Type</th>
             <th class="col-1">Options</th>
           </tr>
@@ -40,7 +40,7 @@
               <td>{{this.room_name}}</td>
               <td>{{this.status}}</td>
               <td>{{this.note}}</td>
-                <td>{{this.room_rate}}</td>
+              <td>{{this.room_rate}}</td>
               <td>{{this.type_name}}</td>
               <td>
                 <a role="button" class="btn py-0 px-1" href="/rooms/{{this.room_id}}">
@@ -87,12 +87,12 @@
         cancelButtonText: 'No, cancel!',
       }).then((result) => {
         if (result.isConfirmed) {
-          deleteFilm(roomId);
+          deleteRoom(roomId);
         }
       })
     }
 
-    function deleteFilm(roomId) {
+    function deleteRoom(roomId) {
       const protocol = window.location.protocol;
       const host = window.location.hostname;
       const port = window.location.port;
