@@ -18,14 +18,16 @@ const renderChartsPage = async (req, res) => {
     revenueOfCurrentMonth: monthlyRevenue,
     totalRevenue: new Intl.NumberFormat('de-DE', {
       style: 'currency', currency: 'VND'
-    }).format(totalRevenue)
+    }).format(totalRevenue),
+    month: currentMonth,
+    year: currentYear
   });
 }
 
 const getMonthlyRevenue = async (req, res) => {
   const {month, year} = req.query;
   const monthlyRevenue = await statisticModel.getMonthlyRevenue(month, year);
-  console.log("--------------- revenue of " + month + "/" + year + " ----------------");
+  console.log("--------------- revenue in " + month + "/" + year + " ----------------");
   console.log(monthlyRevenue);
 
   const totalRevenue = monthlyRevenue.reduce((sum, e) => {
@@ -40,7 +42,18 @@ const getMonthlyRevenue = async (req, res) => {
   })
 }
 
+const getRoomUsageDensity = async (req, res) => {
+  const {month, year} = req.query;
+
+  const roomUsageDensity = await statisticModel.getRoomUsageDensity(month, year);
+  console.log("--------------- room usage density in " + month + "/" + year + " ----------------");
+  console.log(roomUsageDensity);
+
+  res.json(roomUsageDensity);
+}
+
 module.exports = {
   renderChartsPage,
-  getMonthlyRevenue
+  getMonthlyRevenue,
+  getRoomUsageDensity
 }
