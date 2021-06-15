@@ -34,7 +34,7 @@
               <tr>
                 <th class="px-0" scope="col">Room Type</th>
                 <th scope="col">Revenue (VND)</th>
-                <th scope="col">Ratio</th>
+                <th scope="col">Percentage (%)</th>
               </tr>
               </thead>
               <tbody id="revenue-detail">
@@ -71,8 +71,8 @@
               <thead>
               <tr>
                 <th class="px-0" scope="col">Room Name</th>
-                <th scope="col">Duration</th>
-                <th scope="col">Ratio</th>
+                <th scope="col">Duration (Day)</th>
+                <th scope="col">Percentage (%)</th>
               </tr>
               </thead>
               <tbody id="density-detail">
@@ -185,7 +185,7 @@
         content += `<tr>
                       <th class="px-0" scope="row">${typeName}</th>
                       <td>${numberWithDot(data[typeName].totalRoomRevenue)}</td>
-                      <td>${Math.round((data[typeName].totalRoomRevenue / totalRevenue) * 100) / 100}</td>
+                      <td>${Math.round((data[typeName].totalRoomRevenue / totalRevenue) * 100)}</td>
                     </tr>`
       }
       container.html(content);
@@ -197,7 +197,7 @@
         content += `<tr>
                       <th class="px-0" scope="row">${d.roomName}</th>
                       <td>${d.duration}</td>
-                      <td>${d.ratio}</td>
+                      <td>${d.ratio * 100}</td>
                     </tr>`
       }
       $("#density-detail").html(content);
