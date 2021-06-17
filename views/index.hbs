@@ -1,7 +1,7 @@
 <div class="container-fluid">
 
   <div class="row">
-    <div class="col-6 mb-4">
+    <div class="col-12 mb-4">
       <button type="button" class="btn shadow text-success font-weight-bold" onclick="filterRooms({{json rooms}})">
         All ({{rooms.length}})
       </button>
@@ -14,6 +14,19 @@
       <button type="button" class="btn btn-secondary font-weight-bold" onclick="filterRooms({{json fixingRooms}})">
         Fixing ({{fixingRooms.length}})
       </button>
+      <div class="dropdown d-inline-block">
+        <button class="btn btn-primary dropdown-toggle font-weight-bold" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Room Type
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          {{#each types}}
+            <button class="dropdown-item" onclick="filterRoomsByType('{{this.type_id}}')">
+              {{this.type_name}}
+            </button>
+          {{/each}}
+        </div>
+      </div>
     </div>
   </div>
 
@@ -32,9 +45,6 @@
                   </div>
                   <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
                 </div>
-                <!--                <div class="col-auto">-->
-                <!--                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
-                <!--                </div>-->
               </div>
             </div>
           </button>
@@ -53,9 +63,6 @@
                     </div>
                     <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
                   </div>
-                  <!--                  <div class="col-auto">-->
-                  <!--                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
-                  <!--                  </div>-->
                 </div>
               </div>
             </button>
@@ -73,9 +80,6 @@
                     </div>
                     <div class="h6 mb-0 font-weight-bold text-gray-800">{{this.status}}</div>
                   </div>
-                  <!--                  <div class="col-auto">-->
-                  <!--                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>-->
-                  <!--                  </div>-->
                 </div>
               </div>
             </button>
@@ -111,6 +115,7 @@
 </div>
 
 {{#section "script"}}
+  <script type="text/x-handlebars-template" id="rooms">{{json rooms}}</script>
   <script>
     function filterRooms(rooms) {
       let content = "";
@@ -174,6 +179,22 @@
       }
 
       $('#roomRow').html(content);
+    }
+
+    function filterRoomsByType(typeId) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
+      $.ajax({
+        url: `${baseUrl}/rooms/type/${typeId}`,
+        type: 'GET'
+      }).done(data => {
+        console.log(data);
+        filterRooms(data.rooms);
+      }).fail(error => {
+        console.error(error);
+      })
     }
 
     $('#roomInfoModal').on('show.bs.modal', function (event) {

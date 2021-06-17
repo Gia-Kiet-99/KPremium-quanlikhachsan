@@ -11,11 +11,11 @@ module.exports = {
       throw Error(e);
     }
   },
-  getAvailableRooms: async () =>{
+  getAvailableRooms: async () => {
     try {
       return knex('room')
-          .select("room_id", "room_name")
-          .where("status", CONST.ROOM_STATUS.AVAILABLE);
+        .select("room_id", "room_name")
+        .where("status", CONST.ROOM_STATUS.AVAILABLE);
     } catch (e) {
       throw Error(e);
     }
@@ -109,6 +109,15 @@ module.exports = {
       return await knex("room").where("room_id", roomId).del();
     } catch (e) {
       throw Error(e);
+    }
+  },
+  getByType: async (typeId) => {
+    try {
+      return await knex("room").where({room_type: typeId})
+        .join('room_type', 'room.room_type', '=', 'room_type.type_id')
+        .select("room_id", "room_name", "status", "note", "type_name", "room_rate");
+    } catch (e) {
+      throw new Error(e);
     }
   }
 }

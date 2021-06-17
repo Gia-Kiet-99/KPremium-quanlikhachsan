@@ -7,6 +7,8 @@ const {isManager} = require("../middlewares/auth.mdw");
 
 // rooms array
 router.get('/', roomController.getAllRooms);
+
+router.get('/type/:typeId', roomController.getRoomByType);
 // render new room view
 router.get("/new",
   isManager,

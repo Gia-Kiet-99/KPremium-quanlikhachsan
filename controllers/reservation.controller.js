@@ -65,10 +65,12 @@ const renderReservationsPage = async (req, res) => {
 }
 
 const renderNewReservationPage = async (req, res) => {
+  const roomId = parseInt(req.query.roomId || -1);
   const availableRooms = await roomModel.getAvailableRooms();
   res.render("management/add/reservation", {
     activeMenu: "reservation-item",
-    availableRooms: availableRooms
+    availableRooms: availableRooms,
+    roomId: roomId
   });
 }
 

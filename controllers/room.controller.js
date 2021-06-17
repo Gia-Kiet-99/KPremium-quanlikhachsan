@@ -127,6 +127,12 @@ const removeRoom = async (req, res) => {
   res.json(ret);
 }
 
+const getRoomByType = async (req, res) => {
+  const typeId = req.params.typeId;
+  const rooms = await roomModel.getByType(typeId);
+  res.json({rooms});
+}
+
 module.exports = {
   getAllRooms,
   getRoom,
@@ -137,5 +143,6 @@ module.exports = {
   renderNewRoomView,
   renderUpdateRoomPage,
   updateRoomInfo,
-  removeRoom
+  removeRoom,
+  getRoomByType
 }
