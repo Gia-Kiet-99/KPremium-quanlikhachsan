@@ -6,7 +6,8 @@ const getMonthlyRevenue = async (month, year) => {
       .innerJoin("reservation", "receipt.reservation_id", "reservation.id")
       .innerJoin("room", "reservation.room_id", "room.room_id")
       .innerJoin('room_type', 'room.room_type', 'room_type.type_id')
-      .select("receipt.id", "room_name", "type_name", "check_in_time", "check_out_time", "total_price");
+      .select("receipt.id", "room_name", "type_name", "check_in_time", "check_out_time", "total_price")
+      .orderBy("check_out_time");
   } catch (e) {
     throw new Error(e);
   }
