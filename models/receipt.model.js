@@ -1,7 +1,6 @@
 const knex = require('../config/db');
 const reservationModel = require('../models/reservation.model');
 const customerModel = require('../models/customer.model');
-const CONST = require('../config/contraint');
 
 createReceipt = async (reservationId) => {
 	try {
@@ -9,10 +8,10 @@ createReceipt = async (reservationId) => {
 		if (roomRate != null) {
 			const check_out_time = new Date();
 			const noOfDays = getDaysApart(check_out_time, check_in_time)
-			const surchargeNumber = await customerModel.getSurchargeNumberByReservationId(reservationId);
+			const {surcharge, numOfGuests} = await customerModel.getSurchargeNumberByReservationId(reservationId);
 			const newReceipt = {
 				check_out_time: check_out_time,
-				total_price: roomRate * surchargeNumber * noOfDays,
+				total_price: roomRate * surcharge * noOfDays * (numOfGuests >= 3 ? 1.25 : 1),
 				reservation_id: reservationId
 			}
 			const newId = await knex('receipt').insert(newReceipt);
@@ -33,18 +32,18 @@ const getDaysApart = (date1, date2) => {
 }
 
 const getAll = async () => {
-  try {
-    return await knex("receipt")
-      .innerJoin("reservation", "receipt.reservation_id", "reservation.id")
-      .innerJoin("room", "reservation.room_id", "room.room_id")
-      .innerJoin('room_type', 'room.room_type', 'room_type.type_id')
-      .select("receipt.id", "room_name", "type_name", "check_in_time", "check_out_time", "total_price");
-  } catch (e) {
-    throw new Error(e);
-  }
+	try {
+		return await knex("receipt")
+			.innerJoin("reservation", "receipt.reservation_id", "reservation.id")
+			.innerJoin("room", "reservation.room_id", "room.room_id")
+			.innerJoin('room_type', 'room.room_type', 'room_type.type_id')
+			.select("receipt.id", "room_name", "type_name", "check_in_time", "check_out_time", "total_price");
+	} catch (e) {
+		throw new Error(e);
+	}
 }
 
 module.exports = {
-  createReceipt,
-  getAll,
+	createReceipt,
+	getAll,
 }
