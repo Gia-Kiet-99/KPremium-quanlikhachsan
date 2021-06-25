@@ -33,8 +33,9 @@ const createReservation = async (roomId, customers) => {
 const getReservation = async (reservationId) => {
 	const reservations = await knex('reservation')
 		.innerJoin('room', 'reservation.room_id', 'room.room_id')
+		.innerJoin('room_type', 'room.room_type', 'room_type.type_id')
 		.where("reservation.id", reservationId)
-		.select('room_name', 'id', 'reservation.status', 'reservation.room_id', 'check_in_time');
+		.select('room_name', 'id', 'reservation.status', 'reservation.room_id', 'check_in_time', 'room_type.max_of_customer');
 	if (reservations.length !== 0) {
 		return reservations[0];
 	}
@@ -47,20 +48,18 @@ const isUnpaid = async (reservationId) => {
 		.select('status');
 	console.log(res);
 	const status = res[0].status;
-	if (status == CONST.RESERVATION_STATUS.UNPAID) {
-		return true
-	} else return false;
+	return status === CONST.RESERVATION_STATUS.UNPAID;
 }
 
 const preparePayment = async (reservationId) => {
 	const reservation = await getReservation(reservationId);
 	if (reservation !== null) {
 		if (reservation.status === CONST.RESERVATION_STATUS.UNPAID) {
-			const roomRate = await roomModel.checkOutRoom(reservation.room_id);
+			const {roomRate, surchargeRate} = await roomModel.checkOutRoom(reservation.room_id);
 			await knex('reservation')
 				.update({status: CONST.RESERVATION_STATUS.PAID})
 				.where('id', reservationId);
-			return {roomRate: roomRate, check_in_time: reservation.check_in_time};
+			return {roomRate: roomRate, surchargeRate: surchargeRate, check_in_time: reservation.check_in_time};
 		}
 	}
 	return null;

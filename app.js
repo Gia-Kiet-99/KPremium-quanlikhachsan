@@ -20,6 +20,7 @@ const customerRouter = require('./routes/customers.route');
 const receiptRouter = require('./routes/receipt.route');
 const statisticRouter = require("./routes/statistic.route");
 const authRouter = require("./routes/auth.route");
+const regulationRouter = require("./routes/regulation.route");
 const {isAuthenticated} = require("./middlewares/auth.mdw");
 
 const app = express();
@@ -49,6 +50,7 @@ app.use(function (req, res, next) {
 
 // routing
 app.use('/auth', authRouter);
+app.use('/regulations', regulationRouter);
 app.use('/', isAuthenticated, indexRouter);
 app.use('/users', isAuthenticated, usersRouter);
 app.use('/rooms', isAuthenticated, roomsRouter);
