@@ -29,7 +29,7 @@
               </thead>
               <tbody>
               {{#each roomTypes}}
-                <tr>
+                <tr id="room-type-{{this.type_id}}">
                   <th scope="row">{{this.type_id}}</th>
                   <td>{{this.type_name}}</td>
                   <td>{{this.room_rate}}</td>
@@ -39,7 +39,7 @@
                     <a class="btn py-0 px-1" href="/regulations/update/room-type/{{this.type_id}}">
                       <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
                     </a>
-                    <button class="btn py-0 px-1">
+                    <button class="btn py-0 px-1" onclick="confirmDelete('{{this.type_id}}')">
                       <i class="far fa-trash-alt fa-sm"></i>
                     </button>
                   </td>
@@ -115,3 +115,61 @@
 
   </div>
 </div>
+
+{{#section 'script'}}
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script type="text/javascript">
+    function confirmDelete(typeId) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-danger mr-3',
+          cancelButton: 'btn btn-light'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteRoomType(typeId);
+        }
+      })
+    }
+
+    function deleteRoomType(typeId) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
+      $.ajax({
+        url: `${baseUrl}/regulations/room-type/${typeId}`,
+        type: 'DELETE'
+      }).done((data) => {
+        $(`#room-type-${typeId}`).remove();
+        console.log(data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: "The room type has been deleted",
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }).fail((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Oops...",
+          text: "Something went wrong!",
+          icon: 'error',
+          confirmButtonText: 'Sad'
+        })
+      })
+    }
+  </script>
+{{/section}}

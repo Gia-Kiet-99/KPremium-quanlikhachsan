@@ -44,6 +44,12 @@ async function updateRoomType(req, res) {
   res.json(ret);
 }
 
+async function removeRoomType(req, res) {
+  const typeId = req.params.typeId;
+  const ret = await roomTypeModel.remove(typeId);
+  res.json(ret);
+}
+
 const changeMaxGuest = async (req, res) => {
   try {
     const typeId = req.params.typeId;
@@ -114,5 +120,6 @@ module.exports = {
   renderNewRoomTypePage,
   createRoomType,
   renderUpdatePage,
-  updateRoomType
+  updateRoomType,
+  removeRoomType
 }

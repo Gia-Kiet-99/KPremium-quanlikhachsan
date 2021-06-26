@@ -18,9 +18,6 @@ router.patch("/room-type/:typeId",
   regulationController.updateRoomType
 );
 
-router.post('/room-type/:typeId/surcharge-rate', regulationController.changeSurchargeRate);
-router.post('/room-type/:typeId/max-guest', regulationController.changeMaxGuest);
-router.post('/room-type/:typeId/room-rate', regulationController.changeRoomRate);
-router.post('/customer-type/:typeId/surcharge', regulationController.changeCustomerSurchargeRate);
+router.delete("/room-type/:typeId", regulationController.removeRoomType);
 
 module.exports = router;

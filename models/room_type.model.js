@@ -45,6 +45,14 @@ async function update(typeId, dataToUpdate) {
   }
 }
 
+async function remove(typeId) {
+  try {
+    return await db("room_type").where({type_id: typeId}).delete();
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 module.exports = {
-  getAll, add, getById, update
+  getAll, add, getById, update, remove
 }
