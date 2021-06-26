@@ -25,6 +25,25 @@ async function createRoomType(req, res) {
   res.json(info);
 }
 
+async function renderUpdatePage(req, res) {
+  const id = req.params.typeId || -1;
+
+  const roomType = await roomTypeModel.getById(id);
+  res.render("management/update/regulation", {
+    activeMenu: "regulation-item",
+    roomType
+  });
+}
+
+async function updateRoomType(req, res) {
+  const id = req.params.typeId;
+  const dataToUpdate = req.body;
+
+  const ret = await roomTypeModel.update(id, dataToUpdate);
+
+  res.json(ret);
+}
+
 const changeMaxGuest = async (req, res) => {
   try {
     const typeId = req.params.typeId;
@@ -93,5 +112,7 @@ module.exports = {
   changeCustomerSurchargeRate,
   renderRegulationPage,
   renderNewRoomTypePage,
-  createRoomType
+  createRoomType,
+  renderUpdatePage,
+  updateRoomType
 }

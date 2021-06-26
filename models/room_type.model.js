@@ -21,6 +21,30 @@ async function add(info) {
   }
 }
 
+async function getById(id) {
+  try {
+    const result = await db("room_type").where({type_id: id});
+    console.log(result);
+    if (result.length > 0) {
+      return result[0];
+    }
+    return null;
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+async function update(typeId, dataToUpdate) {
+  try {
+    const ret = await db("room_type").where({type_id: typeId})
+      .update(dataToUpdate);
+    console.log(ret);
+    return ret;
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 module.exports = {
-  getAll, add
+  getAll, add, getById, update
 }
