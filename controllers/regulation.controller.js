@@ -6,7 +6,23 @@ async function renderRegulationPage(req, res) {
   const roomTypes = await roomTypeModel.getAll();
   const customerTypes = await customerTypeModel.getAll();
 
-  res.render("management/index/regulation", {roomTypes, customerTypes});
+  res.render("management/index/regulation", {
+    roomTypes,
+    customerTypes,
+    activeMenu: "regulation-item"
+  });
+}
+
+async function renderNewRoomTypePage(req, res) {
+  res.render("management/add/regulation", {
+    activeMenu: "regulation-item"
+  });
+}
+
+async function createRoomType(req, res) {
+  const info = req.body;
+  await roomTypeModel.add(info);
+  res.json(info);
 }
 
 const changeMaxGuest = async (req, res) => {
@@ -75,5 +91,7 @@ module.exports = {
   changeSurchargeRate,
   changeRoomRate,
   changeCustomerSurchargeRate,
-  renderRegulationPage
+  renderRegulationPage,
+  renderNewRoomTypePage,
+  createRoomType
 }

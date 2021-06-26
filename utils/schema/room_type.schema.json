@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "properties": {
+    "typeName": {
+      "type": "string"
+    },
+    "roomRate": {
+      "type": "number"
+    },
+    "maxCustomer": {
+      "type": "number"
+    },
+    "surchargeRate": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "typeName",
+    "roomRate",
+    "maxCustomer",
+    "surchargeRate"
+  ],
+  "additionalProperties": false
+}
