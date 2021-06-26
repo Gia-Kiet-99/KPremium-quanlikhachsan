@@ -20,6 +20,7 @@ const customerRouter = require('./routes/customers.route');
 const receiptRouter = require('./routes/receipt.route');
 const statisticRouter = require("./routes/statistic.route");
 const authRouter = require("./routes/auth.route");
+const regulationRouter = require("./routes/regulation.route");
 const {isAuthenticated} = require("./middlewares/auth.mdw");
 
 const app = express();
@@ -56,6 +57,7 @@ app.use('/reservations', isAuthenticated, reservationsRouter);
 app.use('/statistics', isAuthenticated, statisticRouter);
 app.use('/customers', isAuthenticated, customerRouter);
 app.use('/receipts', isAuthenticated, receiptRouter);
+app.use('/regulations', isAuthenticated, regulationRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

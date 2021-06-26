@@ -1,0 +1,104 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-6">
+
+      <div class="row my-3">
+        <div class="col-sm-6">
+          <h1 class="h3 mb-2 text-gray-800">Room Types</h1>
+        </div>
+        <div class="col-sm-6 text-right">
+          <a role="button" href="/rooms/new"
+             class="btn font-weight-bold text-gray-100"
+             style="background-color: #4e73df;">
+            Create Room Type
+          </a>
+        </div>
+      </div>
+
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Room table</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable">
+              <thead>
+              <tr>
+                <th class="col-2">Type ID</th>
+                <th class="col-2">Type Name</th>
+                <th class="col-2">Room Rate</th>
+                <th class="col-2">Max Customer</th>
+                <th class="col-2">Surcharge Rate</th>
+                <th class="col-2">Options</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#each roomTypes}}
+                <tr>
+                  <th scope="row">{{this.type_id}}</th>
+                  <td>{{this.type_name}}</td>
+                  <td>{{this.room_rate}}</td>
+                  <td>{{this.max_of_customer}}</td>
+                  <td>{{this.surcharge_rate}}</td>
+                  <td>
+                    <button class="btn py-0 px-1">
+                      <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
+                    </button>
+                    <button class="btn py-0 px-1">
+                      <i class="far fa-trash-alt fa-sm"></i>
+                    </button>
+                  </td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+
+      <div class="row my-3">
+        <div class="col-sm-6">
+          <h1 class="h3 mb-2 text-gray-800">Customer Types</h1>
+        </div>
+        <div class="col-sm-6 text-right">
+          <a role="button" href="/rooms/new"
+             class="btn font-weight-bold text-gray-100"
+             style="background-color: #4e73df;">
+            Create Customer Type
+          </a>
+        </div>
+      </div>
+
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Room table</h6>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th class="col-1">ID</th>
+                <th class="col-3">Room Name</th>
+                <th class="col-2">Status</th>
+                <th class="col-2">Note</th>
+                <th class="col-2">Price</th>
+                <th class="col-1">Room Type</th>
+                <th class="col-1">Options</th>
+              </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
