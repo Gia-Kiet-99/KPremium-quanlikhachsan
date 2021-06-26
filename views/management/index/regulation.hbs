@@ -83,16 +83,28 @@
             <table class="table table-bordered">
               <thead>
               <tr>
-                <th class="col-1">ID</th>
-                <th class="col-3">Room Name</th>
-                <th class="col-2">Status</th>
-                <th class="col-2">Note</th>
-                <th class="col-2">Price</th>
-                <th class="col-1">Room Type</th>
-                <th class="col-1">Options</th>
+                <th class="col-2">Type ID</th>
+                <th>Type Name</th>
+                <th>Surcharge</th>
+                <th>Options</th>
               </tr>
               </thead>
               <tbody>
+              {{#each customerTypes}}
+                <tr>
+                  <th scope="row">{{this.type_id}}</th>
+                  <td>{{this.type_name}}</td>
+                  <td>{{this.surcharge}}</td>
+                  <td>
+                    <button class="btn py-0 px-1">
+                      <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
+                    </button>
+                    <button class="btn py-0 px-1">
+                      <i class="far fa-trash-alt fa-sm"></i>
+                    </button>
+                  </td>
+                </tr>
+              {{/each}}
               </tbody>
             </table>
           </div>

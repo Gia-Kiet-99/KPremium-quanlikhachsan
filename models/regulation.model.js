@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-const db = require("../config/db");
-=======
 const knex = require('../config/db');
 
 const changeMaxGuestsOfRoom = async (typeId, maxGuestNum) => {
@@ -56,5 +53,3 @@ module.exports = {
 	changeRoomRate,
 	changeCustomerSurchargeRate
 }
-
->>>>>>> 8d52f69494c90e058009ddde5c2335e444f6dd43

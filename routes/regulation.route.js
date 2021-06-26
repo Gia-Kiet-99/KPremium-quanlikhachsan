@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const regulationController = require("../controllers/regulation.controlller");
+const regulationController = require('../controllers/regulation.controller');
 
 router.get("/", regulationController.renderRegulationPage);
-const regulationController = require('../controllers/regulation.controller');
 
 router.post('/room-type/:typeId/surcharge-rate', regulationController.changeSurchargeRate);
 router.post('/room-type/:typeId/max-guest', regulationController.changeMaxGuest);
