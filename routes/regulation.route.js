@@ -9,6 +9,7 @@ router.get("/new/room-type", regulationController.renderNewRoomTypePage);
 router.get("/update/room-type/:typeId", regulationController.renderUpdatePage);
 
 router.get("/new/customer-type", regulationController.renderNewCustomerTypePage);
+router.get("/update/customer-type/:typeId", regulationController.renderUpdateCustomerTypePage);
 
 router.post("/room-type",
   validator.validate("roomType"),
@@ -24,5 +25,11 @@ router.post("/customer-type",
   validator.validate("customerType"),
   regulationController.createCustomerType
 );
+router.patch("/customer-type/:typeId",
+  validator.validate("updateCustomerType"),
+  regulationController.updateCustomerType
+);
+router.delete("/customer-type/:typeId", regulationController.removeCustomerType);
+
 
 module.exports = router;
