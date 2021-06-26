@@ -8,7 +8,8 @@
                         <i class="fas fa-scroll"></i>
                         &nbsp; Reservation: {{reservation.id}}
                     </span>
-                    <button type="button" class="btn btn-info btn-lg" id="btnCheckout" onclick="confirmCheckOut('{{reservation.id}}')">
+                    <button type="button" class="btn btn-info btn-lg" id="btnCheckout"
+                            onclick="confirmCheckOut('{{reservation.id}}')">
                         <i class="fas fa-money-bill"></i> Check out
                     </button>
                 </h3>
@@ -73,11 +74,17 @@
 {{#section "script"}}
     <!-- Sweetalert -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="text/x-handlebars-template" id="getCustomers">
-     {{json customers}}
-    </script>
+    <script type="text/x-handlebars-template" id="getCustomers">{{json customers}}</script>
+    <script type="text/x-handlebars-template" id="rooms">{{json availableRooms}}</script>
+    <script type="text/x-handlebars-template" id="reservation">{{json reservation}}</script>
     <script type="application/javascript">
-
+        const roomString = document.getElementById("rooms").innerText.trim().replace(/&quot;/g, '"');
+        const rooms = JSON.parse(roomString);
+        const reservation = JSON.parse(document.getElementById("reservation").innerText.trim().replace(/&quot;/g, '"'));
+        rooms.push({
+            room_id: reservation.room_id,
+            max_of_customer: reservation.max_of_customer
+        })
         let customersArray = [];
         const customers = document.getElementById('getCustomers').innerText.trim();
         $(document).ready(() => {
@@ -90,9 +97,10 @@
                 $('#btnReservation').hide();
                 $('#btnCheckout').hide();
             {{/if}}
+            console.log(rooms);
         });
 
-        function confirmCheckOut(reservationId){
+        function confirmCheckOut(reservationId) {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: 'btn btn-primary mr-3',
@@ -175,15 +183,16 @@
                 }
             }).then((result) => {
                 if (!checkExisted(result.value.id_card_number)) {
-                    if(customersArray.length>=3){
+                    const selectedRoomId = parseInt($("#room-id").val());
+                    const maxGuests = rooms.find(room => room.room_id === selectedRoomId).max_of_customer;
+                    if (customersArray.length >= maxGuests) {
                         Swal.fire({
                             icon: "error",
-                            title: "Cannot add more than 3 people",
+                            title: `Cannot add more than ${maxGuests} people`,
                             showConfirmButton: false,
                             timer: 2000
                         });
-                    }
-                    else{
+                    } else {
                         customersArray.push(result.value);
                         updateTable();
                     }

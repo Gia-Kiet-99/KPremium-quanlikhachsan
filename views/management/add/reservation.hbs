@@ -58,8 +58,11 @@
   <!-- Sweetalert -->
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="text/x-handlebars-template" id="roomId">{{roomId}}</script>
+  <script type="text/x-handlebars-template" id="rooms">{{json availableRooms}}</script>
   <script type="application/javascript">
     const roomId = parseInt(document.getElementById("roomId").innerText.trim());
+    const roomString = document.getElementById("rooms").innerText.trim().replace(/&quot;/g, '"');
+    const rooms = JSON.parse(roomString);
     $(`#room-${roomId}`).prop("selected", true);
 
     let customersArray = [];
@@ -89,10 +92,12 @@
         }
       }).then((result) => {
         if (!checkExisted(result.value.id_card_number)) {
-          if (customersArray.length >= 3) {
+            const selectedRoomId = parseInt($("#room-id").val());
+            const maxGuests = rooms.find(room => room.room_id===selectedRoomId).max_of_customer;
+          if (customersArray.length >= maxGuests) {
             Swal.fire({
               icon: "error",
-              title: "Cannot add more than 3 people",
+              title: `Cannot add more than ${maxGuests} people`,
               showConfirmButton: false,
               timer: 2000
             });

@@ -4,14 +4,14 @@ const customerModel = require('../models/customer.model');
 
 createReceipt = async (reservationId) => {
 	try {
-		const {roomRate, check_in_time} = await reservationModel.preparePayment(reservationId);
+		const {roomRate, check_in_time, surchargeRate} = await reservationModel.preparePayment(reservationId);
 		if (roomRate != null) {
 			const check_out_time = new Date();
 			const noOfDays = getDaysApart(check_out_time, check_in_time)
 			const {surcharge, numOfGuests} = await customerModel.getSurchargeNumberByReservationId(reservationId);
 			const newReceipt = {
 				check_out_time: check_out_time,
-				total_price: roomRate * surcharge * noOfDays * (numOfGuests >= 3 ? 1.25 : 1),
+				total_price: roomRate * surcharge * noOfDays * (numOfGuests >= 3 ? 1 + surchargeRate : 1),
 				reservation_id: reservationId
 			}
 			const newId = await knex('receipt').insert(newReceipt);

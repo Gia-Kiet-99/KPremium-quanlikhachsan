@@ -50,6 +50,7 @@ app.use(function (req, res, next) {
 
 // routing
 app.use('/auth', authRouter);
+app.use('/regulations', regulationRouter);
 app.use('/', isAuthenticated, indexRouter);
 app.use('/users', isAuthenticated, usersRouter);
 app.use('/rooms', isAuthenticated, roomsRouter);
