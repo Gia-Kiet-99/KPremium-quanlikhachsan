@@ -8,6 +8,14 @@ async function getAll() {
   }
 }
 
+async function add(info) {
+  try {
+    return await db("customer_type").insert(info);
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 module.exports = {
-  getAll
+  getAll, add
 }

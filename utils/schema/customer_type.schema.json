@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "type_name": {
+      "type": "string"
+    },
+    "surcharge": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "type_name",
+    "surcharge"
+  ],
+  "additionalProperties": false
+}
