@@ -1,166 +1,166 @@
 <div class="container-fluid">
-    <div class="row d-flex justify-content-center">
-        <div class="col-sm-10 mt-3">
-            <div class="card shadow">
+  <div class="row d-flex justify-content-center">
+    <div class="col-sm-10 mt-3">
+      <div class="card shadow">
 
-                <h3 class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-header d-flex justify-content-between align-items-center">
                     <span>
                         <i class="fas fa-scroll"></i>
                         &nbsp; Reservation: {{reservation.id}}
                     </span>
-                    <button type="button" class="btn btn-info btn-lg" id="btnCheckout"
-                            onclick="confirmCheckOut('{{reservation.id}}')">
-                        <i class="fas fa-money-bill"></i> Check out
-                    </button>
-                </h3>
+          <button type="button" class="btn btn-info btn-lg" id="btnCheckout"
+                  onclick="confirmCheckOut('{{reservation.id}}')">
+            <i class="fas fa-money-bill"></i> Check out
+          </button>
+        </h3>
 
-                <div class="card-body">
+        <div class="card-body">
 
-                    <div class="row mb-3">
-                        <div class="col-lg-6">
-                            <h5 class="card-title">Checked In Time</h5>
-                            <p class="card-text">{{reservation.check_in_time}}</p>
-                        </div>
-                        <div class="col-lg-6">
-                            <h5 class="card-title">Status</h5>
-                            <p class="card-text">{{reservation.status}}</p>
-                        </div>
-                    </div>
-                    <form>
-                        <div class="form-group">
-                            <label for="room-name">Room</label>
-                            <select id="room-id" class="custom-select">
-                                <option disabled selected>Choose Room</option>
-                                <option value="{{reservation.room_id}}">{{reservation.room_name}}</option>
-                                {{#each availableRooms}}
-                                    <option value="{{this.room_id}}">{{this.room_name}}</option>
-                                {{/each}}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="room-type">Customers</label>
-                            <button type="button" id="btnCustomer" class="btn btn-outline-primary ml-2 mb-2">
-                                <i class="fas fa-user"></i>
-                                Add Customer
-                            </button>
-                            <table class="table table-hover" id="table_id" style="table-layout: fixed;">
-                                <thead>
-                                <tr>
-                                    <th class="col-2" scope="col">ID Card Number</th>
-                                    <th class="col-3" scope="col">Name</th>
-                                    <th class="col-4" scope="col">Address</th>
-                                    <th class="col-2" scope="col">Customer Type</th>
-                                    <th class="col-1" scope="col">Remove</th>
-                                </tr>
-                                </thead>
-                                <tbody id="customerTable">
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <button type="button" id="btnReservation" class="btn btn-outline-success">
-                            <i class="fa fa-check" aria-hidden="true"></i>
-                            Update Reservation
-                        </button>
-                    </form>
-                </div>
-
+          <div class="row mb-3">
+            <div class="col-lg-6">
+              <h5 class="card-title">Checked In Time</h5>
+              <p class="card-text">{{reservation.check_in_time}}</p>
             </div>
+            <div class="col-lg-6">
+              <h5 class="card-title">Status</h5>
+              <p class="card-text">{{reservation.status}}</p>
+            </div>
+          </div>
+          <form>
+            <div class="form-group">
+              <label for="room-name">Room</label>
+              <select id="room-id" class="custom-select">
+                <option disabled selected>Choose Room</option>
+                <option value="{{reservation.room_id}}">{{reservation.room_name}}</option>
+                {{#each availableRooms}}
+                  <option value="{{this.room_id}}">{{this.room_name}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="room-type">Customers</label>
+              <button type="button" id="btnCustomer" class="btn btn-outline-primary ml-2 mb-2">
+                <i class="fas fa-user"></i>
+                Add Customer
+              </button>
+              <table class="table table-hover" id="table_id" style="table-layout: fixed;">
+                <thead>
+                <tr>
+                  <th class="col-2" scope="col">ID Card Number</th>
+                  <th class="col-3" scope="col">Name</th>
+                  <th class="col-4" scope="col">Address</th>
+                  <th class="col-2" scope="col">Customer Type</th>
+                  <th class="col-1" scope="col">Remove</th>
+                </tr>
+                </thead>
+                <tbody id="customerTable">
+                </tbody>
+              </table>
+            </div>
+
+            <button type="button" id="btnReservation" class="btn btn-outline-success">
+              <i class="fa fa-check" aria-hidden="true"></i>
+              Update Reservation
+            </button>
+          </form>
         </div>
+
+      </div>
     </div>
+  </div>
 
 </div>
 
 {{#section "script"}}
-    <!-- Sweetalert -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="text/x-handlebars-template" id="getCustomers">{{json customers}}</script>
-    <script type="text/x-handlebars-template" id="rooms">{{json availableRooms}}</script>
-    <script type="text/x-handlebars-template" id="reservation">{{json reservation}}</script>
-    <script type="application/javascript">
-        const roomString = document.getElementById("rooms").innerText.trim().replace(/&quot;/g, '"');
-        const rooms = JSON.parse(roomString);
-        const reservation = JSON.parse(document.getElementById("reservation").innerText.trim().replace(/&quot;/g, '"'));
-        rooms.push({
-            room_id: reservation.room_id,
-            max_of_customer: reservation.max_of_customer
+  <!-- Sweetalert -->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="text/x-handlebars-template" id="getCustomers">{{json customers}}</script>
+  <script type="text/x-handlebars-template" id="rooms">{{json availableRooms}}</script>
+  <script type="text/x-handlebars-template" id="reservation">{{json reservation}}</script>
+  <script type="application/javascript">
+    const roomString = document.getElementById("rooms").innerText.trim().replace(/&quot;/g, '"');
+    const rooms = JSON.parse(roomString);
+    const reservation = JSON.parse(document.getElementById("reservation").innerText.trim().replace(/&quot;/g, '"'));
+    rooms.push({
+      room_id: reservation.room_id,
+      max_of_customer: reservation.max_of_customer
+    })
+    let customersArray = [];
+    const customers = document.getElementById('getCustomers').innerText.trim();
+    $(document).ready(() => {
+      $('#room-id').val("{{reservation.room_id}}");
+      customersArray = JSON.parse(customers.replace(/&quot;/g, '"'));
+      updateTable();
+      {{#if (isPaid reservation.status)}}
+        $('#room-id').attr('disabled', true);
+        $('#btnCustomer').hide();
+        $('#btnReservation').hide();
+        $('#btnCheckout').hide();
+      {{/if}}
+      console.log(rooms);
+    });
+
+    function confirmCheckOut(reservationId) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-primary mr-3',
+          cancelButton: 'btn btn-light'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: 'Check out this reservation?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes!',
+        cancelButtonText: 'Nah!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          makePayment(reservationId);
+        }
+      })
+    }
+
+    function makePayment(reservationId) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
+      const dataToPost = {
+        reservation_id: parseInt(reservationId),
+      };
+      const jsonToPost = JSON.stringify(dataToPost);
+      $.ajax({
+        url: `${baseUrl}/receipts/`,
+        type: 'POST',
+        dataType: "json",
+        data: jsonToPost,
+        contentType: "application/json"
+      }).done((data) => {
+        console.log(data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Checked out',
+          showConfirmButton: false,
+          timer: 2000
         })
-        let customersArray = [];
-        const customers = document.getElementById('getCustomers').innerText.trim();
-        $(document).ready(() => {
-            $('#room-id').val("{{reservation.room_id}}");
-            customersArray = JSON.parse(customers.replace(/&quot;/g, '"'));
-            updateTable();
-            {{#if (isPaid reservation.status)}}
-                $('#room-id').attr('disabled', true);
-                $('#btnCustomer').hide();
-                $('#btnReservation').hide();
-                $('#btnCheckout').hide();
-            {{/if}}
-            console.log(rooms);
-        });
+        location.assign(baseUrl + "/receipts");
+      }).fail((error) => {
+        console.log(error);
+        Swal.fire({
+          title: 'Oops...',
+          text: error.statusText,
+          icon: 'error',
+          confirmButtonText: 'Sad'
+        })
+      })
+    }
 
-        function confirmCheckOut(reservationId) {
-            const swalWithBootstrapButtons = Swal.mixin({
-                customClass: {
-                    confirmButton: 'btn btn-primary mr-3',
-                    cancelButton: 'btn btn-light'
-                },
-                buttonsStyling: false
-            })
-
-            swalWithBootstrapButtons.fire({
-                title: 'Check out this reservation?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes!',
-                cancelButtonText: 'Nah!',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    makePayment(reservationId);
-                }
-            })
-        }
-
-        function makePayment(reservationId) {
-            const protocol = window.location.protocol;
-            const host = window.location.hostname;
-            const port = window.location.port;
-            const baseUrl = protocol + "//" + host + ":" + port;
-            const dataToPost = {
-                reservation_id: parseInt(reservationId),
-            };
-            const jsonToPost = JSON.stringify(dataToPost);
-            $.ajax({
-                url: `${baseUrl}/receipts/`,
-                type: 'POST',
-                dataType: "json",
-                data: jsonToPost,
-                contentType: "application/json"
-            }).done((data) => {
-                console.log(data);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Checked out',
-                    showConfirmButton: false,
-                    timer: 2000
-                })
-                location.reload();
-            }).fail((error) => {
-                console.log(error);
-                Swal.fire({
-                    title: 'Oops...',
-                    text: error.statusText,
-                    icon: 'error',
-                    confirmButtonText: 'Sad'
-                })
-            })
-        }
-
-        $('#btnCustomer').on('click', () => {
-            Swal.fire({
-                title: 'Add Customer',
-                html: `<input type="text" id="idNumber" class="swal2-input" placeholder="Id Card Number">
+    $('#btnCustomer').on('click', () => {
+      Swal.fire({
+        title: 'Add Customer',
+        html: `<input type="text" id="idNumber" class="swal2-input" placeholder="Id Card Number">
                     <input type="text" id="name" class="swal2-input" placeholder="Name">
                     <input type="text" id="address" class="swal2-input" placeholder="Address">
                     <select id="cus-type" class="swal2-input">
@@ -169,41 +169,41 @@
                         <option value="2">Foreign Customer</option>
                     </select>
                         `,
-                confirmButtonText: 'Add',
-                focusConfirm: false,
-                preConfirm: () => {
-                    const id_card_number = Swal.getPopup().querySelector('#idNumber').value
-                    const name = Swal.getPopup().querySelector('#name').value
-                    const address = Swal.getPopup().querySelector('#address').value
-                    const type = parseInt(Swal.getPopup().querySelector('#cus-type').value)
-                    if (!id_card_number || !name || !address || !type) {
-                        Swal.showValidationMessage(`Please fill all fields!`)
-                    }
-                    return {id_card_number, name, address, type}
-                }
-            }).then((result) => {
-                if (!checkExisted(result.value.id_card_number)) {
-                    const selectedRoomId = parseInt($("#room-id").val());
-                    const maxGuests = rooms.find(room => room.room_id === selectedRoomId).max_of_customer;
-                    if (customersArray.length >= maxGuests) {
-                        Swal.fire({
-                            icon: "error",
-                            title: `Cannot add more than ${maxGuests} people`,
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                    } else {
-                        customersArray.push(result.value);
-                        updateTable();
-                    }
-                }
-            })
-        })
+        confirmButtonText: 'Add',
+        focusConfirm: false,
+        preConfirm: () => {
+          const id_card_number = Swal.getPopup().querySelector('#idNumber').value
+          const name = Swal.getPopup().querySelector('#name').value
+          const address = Swal.getPopup().querySelector('#address').value
+          const type = parseInt(Swal.getPopup().querySelector('#cus-type').value)
+          if (!id_card_number || !name || !address || !type) {
+            Swal.showValidationMessage(`Please fill all fields!`)
+          }
+          return {id_card_number, name, address, type}
+        }
+      }).then((result) => {
+        if (!checkExisted(result.value.id_card_number)) {
+          const selectedRoomId = parseInt($("#room-id").val());
+          const maxGuests = rooms.find(room => room.room_id === selectedRoomId).max_of_customer;
+          if (customersArray.length >= maxGuests) {
+            Swal.fire({
+              icon: "error",
+              title: `Cannot add more than ${maxGuests} people`,
+              showConfirmButton: false,
+              timer: 2000
+            });
+          } else {
+            customersArray.push(result.value);
+            updateTable();
+          }
+        }
+      })
+    })
 
-        function updateTable() {
-            $('#customerTable').html('');
-            customersArray.forEach((customer, index) => {
-                const tr = `
+    function updateTable() {
+      $('#customerTable').html('');
+      customersArray.forEach((customer, index) => {
+        const tr = `
                 <tr id="${customer.id_card_number}">
                        <th scope="row">${customer.id_card_number}</th>
                        <td>${customer.name}</td>
@@ -214,66 +214,66 @@
                         {{/if}}
                 </tr>
                 `
-                $('#customerTable').prepend(tr);
-            });
+        $('#customerTable').prepend(tr);
+      });
 
+    }
+
+    function remove(index) {
+      customersArray.splice(index, 1);
+      updateTable();
+    }
+
+    function checkExisted(id_card_number) {
+      if (customersArray.length === 0) return false;
+      for (const customer of customersArray) {
+        if (customer.id_card_number === id_card_number) {
+          return true;
         }
+      }
+      return false;
+    }
 
-        function remove(index) {
-            customersArray.splice(index, 1);
-            updateTable();
-        }
+    $("#btnReservation").on("click", () => {
+      const room_id = parseInt($("#room-id").val());
+      const dataToPost = {
+        room_id: room_id,
+        customers: customersArray,
+      };
+      const jsonToPost = JSON.stringify(dataToPost);
+      updateReservation(jsonToPost);
+    });
 
-        function checkExisted(id_card_number) {
-            if (customersArray.length === 0) return false;
-            for (const customer of customersArray) {
-                if (customer.id_card_number === id_card_number) {
-                    return true;
-                }
-            }
-            return false;
-        }
+    function updateReservation(data) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
 
-        $("#btnReservation").on("click", () => {
-            const room_id = parseInt($("#room-id").val());
-            const dataToPost = {
-                room_id: room_id,
-                customers: customersArray,
-            };
-            const jsonToPost = JSON.stringify(dataToPost);
-            updateReservation(jsonToPost);
+      $.ajax({
+        url: `${baseUrl}/reservations/{{reservation.id}}`,
+        type: "PATCH",
+        dataType: "json",
+        data: data,
+        contentType: "application/json"
+      }).done(function (data) {
+        console.log(data);
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          showConfirmButton: false,
+          timer: 2000
         });
+      }).fail(function (error) {
+        console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          showConfirmButton: false,
+          timer: 2000
+        });
+      })
+    }
 
-        function updateReservation(data) {
-            const protocol = window.location.protocol;
-            const host = window.location.hostname;
-            const port = window.location.port;
-            const baseUrl = protocol + "//" + host + ":" + port;
-
-            $.ajax({
-                url: `${baseUrl}/reservations/{{reservation.id}}`,
-                type: "PATCH",
-                dataType: "json",
-                data: data,
-                contentType: "application/json"
-            }).done(function (data) {
-                console.log(data);
-                Swal.fire({
-                    icon: "success",
-                    title: "Success",
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-            }).fail(function (error) {
-                console.log(error);
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-            })
-        }
-
-    </script>
+  </script>
 {{/section}}

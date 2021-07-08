@@ -225,9 +225,7 @@
         case "Unavailable":
           modalFooter = `<div class="modal-footer">
                           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                          <button type="button" class="btn btn-primary">
-                            Create Receipt
-                          </button>
+                          <a class="btn btn-primary" href="/reservations/by-room-id/${data.room_id}">Reservation Detail</a>
                         </div>`;
           break;
         default:
@@ -236,6 +234,63 @@
       // add modal footer
       $(".modal-content.room-modal-content").append(modalFooter);
     });
+
+    function confirmCheckOut(reservationId) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-primary mr-3',
+          cancelButton: 'btn btn-light'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: 'Check out this reservation?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes!',
+        cancelButtonText: 'Nah!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          makePayment(reservationId);
+        }
+      })
+    }
+
+    function makePayment(reservationId) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
+      const dataToPost = {
+        reservation_id: parseInt(reservationId),
+      };
+      const jsonToPost = JSON.stringify(dataToPost);
+      $.ajax({
+        url: `${baseUrl}/receipts/`,
+        type: 'POST',
+        dataType: "json",
+        data: jsonToPost,
+        contentType: "application/json"
+      }).done((data) => {
+        console.log(data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Checked out',
+          showConfirmButton: false,
+          timer: 2000
+        })
+        location.reload();
+      }).fail((error) => {
+        console.log(error);
+        Swal.fire({
+          title: 'Oops...',
+          text: error.statusText,
+          icon: 'error',
+          confirmButtonText: 'Sad'
+        })
+      })
+    }
 
   </script>
 {{/section}}
