@@ -50,6 +50,7 @@ app.use(function (req, res, next) {
 
 // routing
 app.use('/auth', authRouter);
+app.use('/regulations',  regulationRouter);
 app.use('/', isAuthenticated, indexRouter);
 app.use('/users', isAuthenticated, usersRouter);
 app.use('/rooms', isAuthenticated, roomsRouter);
@@ -57,7 +58,6 @@ app.use('/reservations', isAuthenticated, reservationsRouter);
 app.use('/statistics', isAuthenticated, statisticRouter);
 app.use('/customers', isAuthenticated, customerRouter);
 app.use('/receipts', isAuthenticated, receiptRouter);
-app.use('/regulations', isAuthenticated, isManager, regulationRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

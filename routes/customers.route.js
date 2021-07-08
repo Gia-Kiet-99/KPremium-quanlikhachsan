@@ -5,7 +5,7 @@ const validator = require('../middlewares/validator.mdw');
 // render customer page
 router.get('/', customerController.renderCustomersPage);
 router.post('/',validator.validate('customer'), customerController.addCustomer);
-
+router.get('/types', customerController.getAllTypes);
 module.exports = router;
 
 

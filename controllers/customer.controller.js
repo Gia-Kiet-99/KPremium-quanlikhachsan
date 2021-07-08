@@ -23,11 +23,24 @@ const addCustomer = async (req, res) => {
     res.status(400).json({message: 'cannot add customer'});
   }
 }
-
+const getAllTypes = async (req, res) => {
+  try {
+    const customerTypes = await customerModel.getAllTypes();
+    if (customerTypes !== null) {
+      return res.json(customerTypes);
+    } else {
+      return res.status(204);
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({message: 'error'});
+  }
+}
 module.exports = {
   renderCustomersPage,
   addCustomer,
-  renderCustomersPage
+  renderCustomersPage,
+  getAllTypes
 }
 
 

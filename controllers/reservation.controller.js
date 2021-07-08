@@ -67,9 +67,11 @@ const renderReservationsPage = async (req, res) => {
 const renderNewReservationPage = async (req, res) => {
   const roomId = parseInt(req.query.roomId || -1);
   const availableRooms = await roomModel.getAvailableRooms();
+  const customerTypes = await customerModel.getAllTypes();
   res.render("management/add/reservation", {
     activeMenu: "reservation-item",
     availableRooms: availableRooms,
+    customerTypes: customerTypes,
     roomId: roomId
   });
 }
@@ -80,9 +82,11 @@ const renderUpdateReservationPage = async (req, res) => {
   console.log(reservation);
   const customers = await customerModel.getCustomersByReservationId(reservationId);
   const availableRooms = await roomModel.getAvailableRooms();
+  const customerTypes = await customerModel.getAllTypes();
   res.render("management/update/reservation", {
     activeMenu: "reservation-item",
     availableRooms: availableRooms,
+    customerTypes: customerTypes,
     customers: customers,
     reservation: reservation
   });
