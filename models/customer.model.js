@@ -72,10 +72,19 @@ const getCustomersByReservationId = async (reservationId) => {
 		throw Error(e);
 	}
 }
+const getAllTypes = async () => {
+	try {
+		const types = await knex('customer_type');
+		return types;
+	} catch (e) {
+		throw Error(e);
+	}
+}
 module.exports = {
 	getAllCustomersFromDb,
 	inputCustomers,
 	addCustomer,
 	getSurchargeNumberByReservationId,
-	getCustomersByReservationId
+	getCustomersByReservationId,
+	getAllTypes
 }

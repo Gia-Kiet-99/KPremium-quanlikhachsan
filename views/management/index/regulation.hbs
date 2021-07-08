@@ -116,6 +116,85 @@
   </div>
 </div>
 
+{{#section "script"}}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/x-handlebars-template" id="customerTypes">{{json customerTypes}}</script>
+    <script type="application/javascript">
+    const customerTypes = JSON.parse(document.getElementById("customerTypes").innerText.trim().replace(/&quot;/g, '"'));
+
+
+    function editCustomerType(id) {
+        const type = customerTypes.find(t => t.type_id===id);
+        console.log(type);
+        Swal.fire({
+            title: 'Edit Customer Type',
+            html: `
+                    <div class="form-group">
+                        <label for="idNumber">Type ID:</label>
+                        <input type="text" id="idNumber" class="form-control" placeholder="ID" value="${type.type_id}" disabled>
+                    </div>
+                    <div class="form-group">
+                    <label for="name">Type Name:</label>
+                    <input type="text" id="name" class="form-control" placeholder="Name" value="${type.type_name}" disabled>
+                    </div>
+                    <div class="form-group">
+                    <label for="surchargeRate">Surcharge Rate:</label>
+                    <input type="text" id="surchargeRate" class="form-control" placeholder="surchargeRate" value="${type.surcharge}">
+                    </div>
+                        `,
+            confirmButtonText: 'Update',
+            focusConfirm: false,
+            preConfirm: () => {
+                const surchargeRate = parseFloat(Swal.getPopup().querySelector('#surchargeRate').value);
+                if (!surchargeRate) {
+                    Swal.showValidationMessage(`Please fill all fields!`)
+                }
+                return {surchargeRate}
+            }
+        }).then((result) => {
+            const jsonToPost = JSON.stringify(result.value);
+            // console.log(jsonToPost);
+            updateCustomerType(id, jsonToPost);
+        })
+    }
+
+    function updateCustomerType(id, data) {
+        const protocol = window.location.protocol;
+        const host = window.location.hostname;
+        const port = window.location.port;
+        const baseUrl = protocol + "//" + host + ":" + port;
+
+        $.ajax({
+            url: `${baseUrl}/regulations/customer-type/${id}/surcharge`,
+            type: "POST",
+            dataType: "json",
+            data: data,
+            contentType: "application/json"
+        }).done(function (data) {
+            console.log(data);
+            Swal.fire({
+                icon: "success",
+                title: "Success",
+                showConfirmButton: false,
+                timer: 2000
+            });
+            window.location.assign(`${baseUrl}/regulations`);
+        }).fail(function (error) {
+            console.log(error);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        })
+    }
+
+    </script>
+
+
+{{/section}}
+
 {{#section 'script'}}
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

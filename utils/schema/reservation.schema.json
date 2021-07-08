@@ -19,11 +19,7 @@
             "type": "string"
           },
           "type": {
-            "type": "number",
-            "enum": [
-              1,
-              2
-            ]
+            "type": "number"
           }
         },
         "required": [

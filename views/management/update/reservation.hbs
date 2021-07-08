@@ -72,33 +72,34 @@
 </div>
 
 {{#section "script"}}
-  <!-- Sweetalert -->
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script type="text/x-handlebars-template" id="getCustomers">{{json customers}}</script>
-  <script type="text/x-handlebars-template" id="rooms">{{json availableRooms}}</script>
-  <script type="text/x-handlebars-template" id="reservation">{{json reservation}}</script>
-  <script type="application/javascript">
-    const roomString = document.getElementById("rooms").innerText.trim().replace(/&quot;/g, '"');
-    const rooms = JSON.parse(roomString);
-    const reservation = JSON.parse(document.getElementById("reservation").innerText.trim().replace(/&quot;/g, '"'));
-    rooms.push({
-      room_id: reservation.room_id,
-      max_of_customer: reservation.max_of_customer
-    })
-    let customersArray = [];
-    const customers = document.getElementById('getCustomers').innerText.trim();
-    $(document).ready(() => {
-      $('#room-id').val("{{reservation.room_id}}");
-      customersArray = JSON.parse(customers.replace(/&quot;/g, '"'));
-      updateTable();
-      {{#if (isPaid reservation.status)}}
-        $('#room-id').attr('disabled', true);
-        $('#btnCustomer').hide();
-        $('#btnReservation').hide();
-        $('#btnCheckout').hide();
-      {{/if}}
-      console.log(rooms);
-    });
+    <!-- Sweetalert -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/x-handlebars-template" id="getCustomers">{{json customers}}</script>
+    <script type="text/x-handlebars-template" id="rooms">{{json availableRooms}}</script>
+    <script type="text/x-handlebars-template" id="reservation">{{json reservation}}</script>
+    <script type="text/x-handlebars-template" id="cusTypes">{{json customerTypes}}</script>
+    <script type="application/javascript">
+        const roomString = document.getElementById("rooms").innerText.trim().replace(/&quot;/g, '"');
+        const rooms = JSON.parse(roomString);
+        const reservation = JSON.parse(document.getElementById("reservation").innerText.trim().replace(/&quot;/g, '"'));
+        const customerTypes = JSON.parse(document.getElementById("cusTypes").innerText.trim().replace(/&quot;/g, '"'));
+        rooms.push({
+            room_id: reservation.room_id,
+            max_of_customer: reservation.max_of_customer
+        })
+        let customersArray = [];
+        const customers = document.getElementById('getCustomers').innerText.trim();
+        $(document).ready(() => {
+            $('#room-id').val("{{reservation.room_id}}");
+            customersArray = JSON.parse(customers.replace(/&quot;/g, '"'));
+            updateTable();
+            {{#if (isPaid reservation.status)}}
+                $('#room-id').attr('disabled', true);
+                $('#btnCustomer').hide();
+                $('#btnReservation').hide();
+                $('#btnCheckout').hide();
+            {{/if}}
+        });
 
     function confirmCheckOut(reservationId) {
       const swalWithBootstrapButtons = Swal.mixin({
@@ -157,48 +158,47 @@
       })
     }
 
-    $('#btnCustomer').on('click', () => {
-      Swal.fire({
-        title: 'Add Customer',
-        html: `<input type="text" id="idNumber" class="swal2-input" placeholder="Id Card Number">
-                    <input type="text" id="name" class="swal2-input" placeholder="Name">
-                    <input type="text" id="address" class="swal2-input" placeholder="Address">
-                    <select id="cus-type" class="swal2-input">
-                        <option disabled selected>Customer Type</option>
-                        <option value="1">Domestic Customer</option>
-                        <option value="2">Foreign Customer</option>
-                    </select>
-                        `,
-        confirmButtonText: 'Add',
-        focusConfirm: false,
-        preConfirm: () => {
-          const id_card_number = Swal.getPopup().querySelector('#idNumber').value
-          const name = Swal.getPopup().querySelector('#name').value
-          const address = Swal.getPopup().querySelector('#address').value
-          const type = parseInt(Swal.getPopup().querySelector('#cus-type').value)
-          if (!id_card_number || !name || !address || !type) {
-            Swal.showValidationMessage(`Please fill all fields!`)
-          }
-          return {id_card_number, name, address, type}
-        }
-      }).then((result) => {
-        if (!checkExisted(result.value.id_card_number)) {
-          const selectedRoomId = parseInt($("#room-id").val());
-          const maxGuests = rooms.find(room => room.room_id === selectedRoomId).max_of_customer;
-          if (customersArray.length >= maxGuests) {
+        const html = `<input type="text" id="idNumber" class="swal2-input" placeholder="Id Card Number">
+            <input type="text" id="name" class="swal2-input" placeholder="Name">
+            <input type="text" id="address" class="swal2-input" placeholder="Address">
+            <select id="cus-type" class="swal2-input">
+            <option disabled selected>Customer Type</option>
+            ${customerTypes.map(type => `<option value="${type.type_id}">${type.type_name}</option>`).join('')}
+            </select>`
+        $('#btnCustomer').on('click', () => {
             Swal.fire({
-              icon: "error",
-              title: `Cannot add more than ${maxGuests} people`,
-              showConfirmButton: false,
-              timer: 2000
-            });
-          } else {
-            customersArray.push(result.value);
-            updateTable();
-          }
-        }
-      })
-    })
+                title: 'Add Customer',
+                html: html,
+                confirmButtonText: 'Add',
+                focusConfirm: false,
+                preConfirm: () => {
+                    const id_card_number = Swal.getPopup().querySelector('#idNumber').value
+                    const name = Swal.getPopup().querySelector('#name').value
+                    const address = Swal.getPopup().querySelector('#address').value
+                    const type = parseInt(Swal.getPopup().querySelector('#cus-type').value)
+                    if (!id_card_number || !name || !address || !type) {
+                        Swal.showValidationMessage('Please fill all fields!')
+                    }
+                    return {id_card_number, name, address, type}
+                }
+            }).then((result) => {
+                if (!checkExisted(result.value.id_card_number)) {
+                    const selectedRoomId = parseInt($("#room-id").val());
+                    const maxGuests = rooms.find(room => room.room_id === selectedRoomId).max_of_customer;
+                    if (customersArray.length >= maxGuests) {
+                        Swal.fire({
+                            icon: "error",
+                            title: `Cannot add more than ${maxGuests} people`,
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    } else {
+                        customersArray.push(result.value);
+                        updateTable();
+                    }
+                }
+            })
+        })
 
     function updateTable() {
       $('#customerTable').html('');
@@ -208,7 +208,7 @@
                        <th scope="row">${customer.id_card_number}</th>
                        <td>${customer.name}</td>
                        <td>${customer.address}</td>
-                       <td>${customer.type == 1 ? "Domestic Customer" : "Foreign Customer"}</td>
+                       <td>${customerTypes.find(type => type.type_id === customer.type).type_name}</td>
                        {{#if (isUnpaid reservation.status)}}
                        <td class="text-center"><button class="btn py-0 px-1" onclick="remove(${index})"><i class="fas fa-minus text-danger"></i></button></td>
                         {{/if}}

@@ -59,25 +59,26 @@
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="text/x-handlebars-template" id="roomId">{{roomId}}</script>
   <script type="text/x-handlebars-template" id="rooms">{{json availableRooms}}</script>
+  <script type="text/x-handlebars-template" id="cusTypes">{{json customerTypes}}</script>
   <script type="application/javascript">
     const roomId = parseInt(document.getElementById("roomId").innerText.trim());
     const roomString = document.getElementById("rooms").innerText.trim().replace(/&quot;/g, '"');
     const rooms = JSON.parse(roomString);
+    const customerTypes = JSON.parse(document.getElementById("cusTypes").innerText.trim().replace(/&quot;/g, '"'));
     $(`#room-${roomId}`).prop("selected", true);
 
+    const html = `<input type="text" id="idNumber" class="swal2-input" placeholder="Id Card Number">
+            <input type="text" id="name" class="swal2-input" placeholder="Name">
+            <input type="text" id="address" class="swal2-input" placeholder="Address">
+            <select id="cus-type" class="swal2-input">
+            <option disabled selected>Customer Type</option>
+            ${customerTypes.map(type => `<option value="${type.type_id}">${type.type_name}</option>`).join('')}
+            </select>`
     let customersArray = [];
     $('#btnCustomer').on('click', () => {
       Swal.fire({
         title: 'Add Customer',
-        html: `<input type="text" id="idNumber" class="swal2-input" placeholder="Id Card Number">
-                    <input type="text" id="name" class="swal2-input" placeholder="Name">
-                    <input type="text" id="address" class="swal2-input" placeholder="Address">
-                    <select id="cus-type" class="swal2-input">
-                        <option disabled selected>Customer Type</option>
-                        <option value="1">Domestic Customer</option>
-                        <option value="2">Foreign Customer</option>
-                    </select>
-                        `,
+        html: html,
         confirmButtonText: 'Add',
         focusConfirm: false,
         preConfirm: () => {
@@ -117,7 +118,7 @@
                        <th scope="row">${customer.id_card_number}</th>
                        <td>${customer.name}</td>
                        <td>${customer.address}</td>
-                       <td>${customer.type == 1 ? "Domestic Customer" : "Foreign Customer"}</td>
+                       <td>${customerTypes.find(type => type.type_id === customer.type).type_name}</td>
                        <td class="text-center"><button class="btn py-0 px-1" onclick="remove(${index})"><i class="fas fa-minus text-danger"></i></button></td>
                 </tr>
                 `
