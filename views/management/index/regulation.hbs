@@ -23,7 +23,7 @@
                 <th class="col-2">Type Name</th>
                 <th class="col-2">Room Rate</th>
                 <th class="col-2">Max Customer</th>
-                <th class="col-2">Surcharge Rate</th>
+                <th class="col-2">Surcharge Rate (%)</th>
                 <th class="col-2">Options</th>
               </tr>
               </thead>
@@ -79,22 +79,22 @@
               <tr>
                 <th class="col-2">Type ID</th>
                 <th>Type Name</th>
-                <th>Surcharge</th>
+                <th>Coefficient</th>
                 <th>Options</th>
               </tr>
               </thead>
               <tbody>
               {{#each customerTypes}}
-                <tr>
+                <tr id="customer-type-{{this.type_id}}">
                   <th scope="row">{{this.type_id}}</th>
                   <td>{{this.type_name}}</td>
                   <td>{{this.surcharge}}</td>
                   <td>
-                    <button class="btn py-0 px-1" onclick="editCustomerType({{this.type_id}})">
-                      <i class="far fa-edit fa-sm" style="color: #4e73df" ></i>
-                    </button>
-                    <button class="btn py-0 px-1">
-                      <i class="far fa-trash-alt fa-sm" onclick="deleteCustomerType({{this.type_id}})"></i>
+                    <a class="btn py-0 px-1" href="/regulations/update/customer-type/{{this.type_id}}">
+                      <i class="far fa-edit fa-sm" style="color: #4e73df"></i>
+                    </a>
+                    <button class="btn py-0 px-1" onclick="confirmDeleteCustomerType('{{this.type_id}}')">
+                      <i class="far fa-trash-alt fa-sm"></i>
                     </button>
                   </td>
                 </tr>
@@ -102,7 +102,7 @@
               </tbody>
             </table>
             <div>
-              <a role="button" href="/rooms/new"
+              <a role="button" href="/regulations/new/customer-type"
                  class="btn font-weight-bold text-gray-100"
                  style="background-color: #4e73df;">
                 Create Customer Type
@@ -237,6 +237,58 @@
           icon: 'success',
           title: 'Success',
           text: "The room type has been deleted",
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }).fail((error) => {
+        console.log(error);
+        Swal.fire({
+          title: "Oops...",
+          text: "Something went wrong!",
+          icon: 'error',
+          confirmButtonText: 'Sad'
+        })
+      })
+    }
+
+    function confirmDeleteCustomerType(typeId) {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-danger mr-3',
+          cancelButton: 'btn btn-light'
+        },
+        buttonsStyling: false
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteCustomerType(typeId);
+        }
+      })
+    }
+
+    function deleteCustomerType(typeId) {
+      const protocol = window.location.protocol;
+      const host = window.location.hostname;
+      const port = window.location.port;
+      const baseUrl = protocol + "//" + host + ":" + port;
+      $.ajax({
+        url: `${baseUrl}/regulations/customer-type/${typeId}`,
+        type: 'DELETE'
+      }).done((data) => {
+        $(`#customer-type-${typeId}`).remove();
+        console.log(data);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: "The customer type has been deleted",
           showConfirmButton: false,
           timer: 2000
         })

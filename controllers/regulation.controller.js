@@ -6,6 +6,10 @@ async function renderRegulationPage(req, res) {
   const roomTypes = await roomTypeModel.getAll();
   const customerTypes = await customerTypeModel.getAll();
 
+  roomTypes.forEach(type => {
+    type.surcharge_rate *= 100;
+  });
+
   res.render("management/index/regulation", {
     roomTypes,
     customerTypes,
@@ -14,7 +18,7 @@ async function renderRegulationPage(req, res) {
 }
 
 async function renderNewRoomTypePage(req, res) {
-  res.render("management/add/regulation", {
+  res.render("management/add/roomType", {
     activeMenu: "regulation-item"
   });
 }
@@ -25,11 +29,14 @@ async function createRoomType(req, res) {
   res.json(info);
 }
 
-async function renderUpdatePage(req, res) {
+async function renderUpdatePage(req, res, next) {
   const id = req.params.typeId || -1;
 
   const roomType = await roomTypeModel.getById(id);
-  res.render("management/update/regulation", {
+  if (!roomType) {
+    next();
+  }
+  res.render("management/update/roomType", {
     activeMenu: "regulation-item",
     roomType
   });
@@ -47,6 +54,45 @@ async function updateRoomType(req, res) {
 async function removeRoomType(req, res) {
   const typeId = req.params.typeId;
   const ret = await roomTypeModel.remove(typeId);
+  res.json(ret);
+}
+
+async function renderNewCustomerTypePage(req, res) {
+  res.render("management/add/customerType", {
+    activeMenu: "regulation-item"
+  })
+}
+
+async function createCustomerType(req, res) {
+  const info = req.body;
+  const ret = await customerTypeModel.add(info);
+  res.json(ret);
+}
+
+async function renderUpdateCustomerTypePage(req, res, next) {
+  const typeId = req.params.typeId;
+
+  const customerType = await customerTypeModel.getById(typeId);
+  if (!customerType) {
+    next();
+  }
+  res.render("management/update/customerType", {
+    activeMenu: "regulation-item",
+    customerType
+  });
+}
+
+async function updateCustomerType(req, res) {
+  const typeId = req.params.typeId;
+  const dataToUpdate = req.body;
+
+  const ret = await customerTypeModel.update(typeId, dataToUpdate);
+  res.json(ret);
+}
+
+async function removeCustomerType(req, res) {
+  const typeId = req.params.typeId;
+  const ret = await customerTypeModel.remove(typeId);
   res.json(ret);
 }
 
@@ -121,5 +167,10 @@ module.exports = {
   createRoomType,
   renderUpdatePage,
   updateRoomType,
-  removeRoomType
+  removeRoomType,
+  renderNewCustomerTypePage,
+  createCustomerType,
+  renderUpdateCustomerTypePage,
+  updateCustomerType,
+  removeCustomerType
 }

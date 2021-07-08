@@ -5,28 +5,23 @@
 
         <h3 class="card-header">
           <i class="fas fa-bed" aria-hidden="true"></i>
-          &nbsp; New Room Type
+          &nbsp; Update Customer Type
         </h3>
 
         <div class="card-body">
           <form>
             <div class="form-group">
-              <label for="room-type-name">Type Name</label>
-              <input type="text" id="room-type-name" class="form-control" autofocus required>
+              <label for="customer-type-name">Type Name</label>
+              <input type="text" id="customer-type-name" class="form-control" autofocus
+                     value="{{customerType.type_name}}">
             </div>
             <div class="form-group">
-              <label for="room-rate">Room Rate</label>
-              <input type="number" id="room-rate" class="form-control" min="1" required>
+              <label for="surcharge">Surcharge</label>
+              <input type="number" id="surcharge" class="form-control" min="0"
+                     value="{{customerType.surcharge}}">
             </div>
-            <div class="form-group">
-              <label for="max-customer">Maximum Customer</label>
-              <input type="number" id="max-customer" class="form-control" min="1" required>
-            </div>
-            <div class="form-group">
-              <label for="surcharge-rte">Surcharge Rate</label>
-              <input type="number" id="surcharge-rate" class="form-control" min="0" required>
-            </div>
-            <button type="button" id="btnSave" class="btn btn-outline-success">
+            <button type="button" id="btnSave" class="btn btn-outline-success"
+            onclick="handleUpdateCustomerType('{{customerType.type_id}}')">
               <i class="fa fa-check" aria-hidden="true"></i>
               Save
             </button>
@@ -44,23 +39,24 @@
   <!-- Sweetalert -->
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <script type="application/javascript">
-    $("#btnSave").on("click", () => {
-      const typeName = $("#room-type-name").val().trim();
-      const roomRate = parseInt($("#room-rate").val());
-      const maxCustomer = parseInt($("#max-customer").val());
-      const surchargeRate = parseFloat($("#surcharge-rate").val());
-      const dataToPost = {
-        typeName,
-        roomRate,
-        maxCustomer,
-        surchargeRate
-      };
-      const jsonToPost = JSON.stringify(dataToPost);
-      createNewRoomType(jsonToPost);
-    });
+  <script type="text/javascript">
+    function handleUpdateCustomerType(typeId) {
+      const typeName = $("#customer-type-name").val().trim();
+      const surcharge = parseFloat($("#surcharge").val());
+      const dataToPost = {};
 
-    function createNewRoomType(data) {
+      if (typeName) {
+        dataToPost.type_name = typeName;
+      }
+      if (surcharge) {
+        dataToPost.surcharge = surcharge;
+      }
+
+      const jsonToPost = JSON.stringify(dataToPost);
+      updateCustomerType(typeId, jsonToPost);
+    }
+
+    function updateCustomerType(typeId, data) {
       const protocol = window.location.protocol;
       const host = window.location.hostname;
       const port = window.location.port;
@@ -68,8 +64,8 @@
 
       console.log(baseUrl);
       $.ajax({
-        url: `${baseUrl}/regulations/room-type`,
-        type: "POST",
+        url: `${baseUrl}/regulations/customer-type/${typeId}`,
+        type: "PATCH",
         dataType: "json",
         data: data,
         contentType: "application/json"
@@ -78,7 +74,7 @@
         Swal.fire({
           icon: "success",
           title: "Success",
-          text: "The room type has been created",
+          text: "The customer type has been updated",
           showConfirmButton: false,
           timer: 2000
         }).then(() => {
@@ -95,6 +91,5 @@
         });
       })
     }
-
   </script>
 {{/section}}

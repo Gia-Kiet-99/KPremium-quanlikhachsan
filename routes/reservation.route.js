@@ -7,6 +7,7 @@ router.get("/", reservationController.renderReservationsPage);
 // render new reservation page
 router.get('/new', reservationController.renderNewReservationPage);
 // render update reservation by id
+router.get('/by-room-id/:roomId', reservationController.renderUpdateReservationPageByRoomId);
 router.get('/:reservationId', reservationController.renderUpdateReservationPage);
 // create new reservation
 router.post('/',

@@ -24,7 +24,6 @@ async function add(info) {
 async function getById(id) {
   try {
     const result = await db("room_type").where({type_id: id});
-    console.log(result);
     if (result.length > 0) {
       return result[0];
     }
