@@ -101,9 +101,11 @@ const renderUpdateReservationPageByRoomId = async (req, res) => {
   console.log("--------------------", reservation);
   const customers = await customerModel.getCustomersByReservationId(reservation.id);
   const availableRooms = await roomModel.getAvailableRooms();
+  const customerTypes = await customerModel.getAllTypes();
   res.render("management/update/reservation", {
     activeMenu: "reservation-item",
     availableRooms: availableRooms,
+    customerTypes: customerTypes,
     customers: customers,
     reservation: reservation
   });
