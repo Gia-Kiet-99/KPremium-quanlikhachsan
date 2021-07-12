@@ -15,9 +15,10 @@ const renderChartsPage = async (req, res) => {
   const roomUsageDensity = await statisticModel.getRoomUsageDensity(currentMonth, currentYear);
   console.log("--------------- room usage density in " + currentMonth + "/" + currentYear + " ----------------");
   console.log(roomUsageDensity);
-  const totalDuration = roomUsageDensity.reduce((sum, value) => {
+  const totalDuration = Math.round(roomUsageDensity.reduce((sum, value) => {
     return sum + value.duration;
-  }, 0);
+  }, 0) * 100) / 100;
+  // console.log(totalDuration);
 
   res.render("statistic/chart", {
     activeMenu: "charts-item",
