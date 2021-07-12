@@ -197,7 +197,7 @@
         content += `<tr>
                       <th class="px-0" scope="row">${d.roomName}</th>
                       <td>${d.duration}</td>
-                      <td>${d.ratio * 100}</td>
+                      <td>${Math.round(d.ratio * 100)}</td>
                     </tr>`
       }
       $("#density-detail").html(content);
